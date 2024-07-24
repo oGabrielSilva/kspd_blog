@@ -1,20 +1,15 @@
+import { useColorSchema } from '@app/hooks/useColorSchema'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import properties from '@resources/config/properties.json'
 import { useEffect, useRef, useState } from 'react'
-
-type TColorSchema = 'SYSTEM' | 'DARK' | 'LIGHT'
 
 export function UIColorSchemeSelector() {
   const [isActive, setActive] = useState(false)
-  const [schema, setSchema] = useState<TColorSchema>(
-    (localStorage.getItem(properties.storage.colorSchema.key) as TColorSchema) ?? 'SYSTEM',
-  )
+  const { schema, setSchema } = useColorSchema()
 
   const button = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const func = (e: MouseEvent) => {
-      console.log(e.target)
       if (button.current && !button.current.contains(e.target as Node)) {
         setActive(false)
       }
@@ -25,15 +20,11 @@ export function UIColorSchemeSelector() {
     return () => document.removeEventListener('click', func)
   }, [])
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = schema.toLocaleLowerCase()
-    localStorage.setItem(properties.storage.colorSchema.key, schema)
-  }, [schema])
-
   return (
     <div className={'dropdown is-right' + (isActive ? ' is-active' : '')}>
       <div className="dropdown-trigger">
         <button
+          type="button"
           ref={button}
           onClick={() => setActive((v) => !v)}
           aria-haspopup="true"
@@ -49,7 +40,7 @@ export function UIColorSchemeSelector() {
           >
             <FontAwesomeIcon
               size="1x"
-              icon={schema === 'SYSTEM' ? 'laptop' : schema === 'DARK' ? 'moon' : 'sun'}
+              icon={schema === 'SYSTEM' ? 'computer' : schema === 'DARK' ? 'moon' : 'sun'}
             />
           </span>
 
@@ -66,16 +57,18 @@ export function UIColorSchemeSelector() {
       >
         <div className="dropdown-content p-2">
           <button
+            type="button"
             onClick={() => setSchema('SYSTEM')}
             className="is-flex is-align-items-center gap-3 mb-1 has-text-primary dropdown-item"
             style={{ borderRadius: 4 }}
           >
             <span className="icon is-small">
-              <FontAwesomeIcon size="1x" icon="laptop" />
+              <FontAwesomeIcon size="1x" icon="computer" />
             </span>
             <span>Sistema</span>
           </button>
           <button
+            type="button"
             onClick={() => setSchema('LIGHT')}
             className="is-flex is-align-items-center gap-3 mb-1 has-text-warning dropdown-item"
             style={{ borderRadius: 4 }}
@@ -86,6 +79,7 @@ export function UIColorSchemeSelector() {
             <span>Claro</span>
           </button>
           <button
+            type="button"
             onClick={() => setSchema('DARK')}
             className="is-flex is-align-items-center gap-3 dropdown-item has-text-link"
             style={{ borderRadius: 4 }}

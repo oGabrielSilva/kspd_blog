@@ -1,5 +1,4 @@
 import { UIVerifyEmail } from '@app/components/home/UIVerifyEmail'
-import { UITopAppBar } from '@app/components/shared/UITopAppBar'
 import { useAuth } from '@app/hooks/useAuth'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -23,17 +22,5 @@ export function HomePage() {
     if (auth.isAnonymous) nav('/session')
   }, [auth, nav])
 
-  if (auth.isAnonymous) {
-    return <div />
-  }
-
-  if (!userVerified) {
-    return <UIVerifyEmail />
-  }
-
-  return (
-    <div>
-      <UITopAppBar />
-    </div>
-  )
+  return (auth.isAnonymous && <div />) || !userVerified ? <UIVerifyEmail /> : <div />
 }

@@ -38,6 +38,17 @@ body {
 [data-screen-locker-kassiopeia-tool] {
   top: 1px !important;
 }
+
+[data-page-container] {
+  height: calc(100vh - 50px);
+  width: 100vw;
+  overflow: auto;
+}
+
+[data-page-container]::-webkit-scrollbar {
+  display: none;
+}
+
 /*
 ::-ms-reveal {
   display: none;

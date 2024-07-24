@@ -1,13 +1,12 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { DetailedHTMLProps, forwardRef, HTMLInputTypeAttribute, InputHTMLAttributes } from 'react'
+import { DetailedHTMLProps, forwardRef, InputHTMLAttributes } from 'react'
 
 interface IProps {
   label: string
   value: string
   id?: string
   placeholder?: string
-  type?: HTMLInputTypeAttribute
   iconLeft?: IconProp
   iconRight?: IconProp
   isDanger?: boolean
@@ -16,11 +15,12 @@ interface IProps {
     design?: 'danger' | 'success' | 'info' | 'warning' | 'normal'
     isVisible: boolean
   }
-  onImputed?: (value: string, input: HTMLInputElement) => void
-  extra?: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+  onImputed?: (value: string, input: HTMLTextAreaElement) => void
+  extra?: DetailedHTMLProps<InputHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>
+  rows?: number
 }
 
-export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(props, ref) {
+export const UITextarea = forwardRef<HTMLTextAreaElement, IProps>(function UITextarea(props, ref) {
   const id = props.id
     ? props.id
     : Date.now().toString(36) + '___' + Math.random().toString().replace('.', '___')
@@ -33,27 +33,27 @@ export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(pro
       <div
         className={`control ${props.iconLeft ? 'has-icons-left' : ''} ${props.iconRight ? 'has-icons-right' : ''}`}
       >
-        <input
+        <textarea
           ref={ref}
           id={id}
-          className={props.isDanger ? 'is-danger input' : 'input'}
-          type={props.type ?? 'text'}
+          className={props.isDanger ? 'is-danger textarea input' : 'textarea input'}
           placeholder={props.placeholder}
           value={props.value}
           onInput={(evt) =>
             props.onImputed ? props.onImputed(evt.currentTarget.value, evt.currentTarget) : void 0
           }
           {...(props.extra ? props.extra : {})}
+          rows={props.rows ?? 5}
         />
         {props.iconLeft ? (
-          <span className="icon is-small is-left">
+          <span style={{ paddingTop: '0.5em' }} className="icon is-small is-left">
             <FontAwesomeIcon className={props.isDanger ? 'has-text-danger' : ''} icon={props.iconLeft} />
           </span>
         ) : (
           void 0
         )}
         {props.iconRight ? (
-          <span className="icon is-small is-right">
+          <span style={{ paddingTop: '0.5em' }} className="icon is-small is-right">
             <FontAwesomeIcon className={props.isDanger ? 'has-text-danger' : ''} icon={props.iconRight} />
           </span>
         ) : (

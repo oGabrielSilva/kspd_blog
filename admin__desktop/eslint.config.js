@@ -34,6 +34,7 @@ export default [
         },
       ],
       'object-curly-spacing': ['error', 'always'],
+      'react/button-has-type': 'warn',
     },
   },
 ]

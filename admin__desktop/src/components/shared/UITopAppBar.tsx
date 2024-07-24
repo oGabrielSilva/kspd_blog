@@ -1,10 +1,17 @@
+import { UIOffcanvasAppNavigation } from '@app/components/home/UIOffcanvasAppNavigation'
 import { UIColorSchemeSelector } from '@app/components/shared/UIColorSchemeSelector'
 import { UIAvatar } from '@app/components/user/UIAvatar'
 import { useAuth } from '@app/hooks/useAuth'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { appWindow } from '@tauri-apps/api/window'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+const routesExcludedGoBack = ['/session', '/']
 
 export function UITopAppBar() {
   const auth = useAuth()
+  const location = useLocation()
+  const nav = useNavigate()
 
   return (
     <div className="px-3" style={{ height: 50, width: '100vw' }}>
@@ -13,15 +20,35 @@ export function UITopAppBar() {
         data-tauri-drag-region
         style={{ height: '100%' }}
       >
-        <h1 className="is-unselectable is-family-monospace" data-tauri-drag-region>
-          Kassiopeia Admin
-        </h1>
+        <div className="is-flex is-align-items-center gap-3">
+          {!auth.isAnonymous ? (
+            <div>
+              <UIOffcanvasAppNavigation />
+            </div>
+          ) : (
+            void 0
+          )}
+          <h1 className="is-unselectable is-family-monospace" data-tauri-drag-region>
+            Kassiopeia Admin
+          </h1>
+        </div>
 
         <div className="is-flex is-align-items-center gap-3">
+          {routesExcludedGoBack.includes(location.pathname) ? (
+            void 0
+          ) : (
+            <div>
+              <button onClick={() => nav(-1)} type="button" className="button is-text px-3 py-1">
+                <span className="icon is-small">
+                  <FontAwesomeIcon className="has-text-link" icon="arrow-left" />
+                </span>
+              </button>
+            </div>
+          )}
           <div>
             <UIColorSchemeSelector />
           </div>
-          {auth.isAnonymous ? (
+          {auth.isAnonymous || location.pathname === '/user' ? (
             void 0
           ) : (
             <div className="mr-5">

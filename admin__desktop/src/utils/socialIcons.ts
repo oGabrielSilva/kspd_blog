@@ -20,5 +20,8 @@ export const socialIcons = {
   tiktok: { name: 'TikTok', icon: ['fab', 'tiktok'] },
   medium: { name: 'Medium', icon: ['fab', 'medium'] },
   vimeo: { name: 'Vimeo', icon: ['fab', 'vimeo'] },
+  email: { name: 'E-mail', icon: ['fas', 'envelope'] },
   default: { name: 'Link', icon: ['fas', 'globe'] },
 }
+
+export type TSocialIcon = keyof typeof socialIcons

@@ -1,16 +1,9 @@
 import { closeModal } from '@app/lib/bulma/modals'
-import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef } from 'react'
 
-interface IModalButton {
-  design?: 'success' | 'danger' | 'warning' | 'link' | 'ghost' | 'none'
-  label: string
-  type?: 'button' | 'submit' | 'reset' | undefined | null
-  isOutlined?: boolean
+interface IModalButton extends IButton {
   closeModalOnClick?: boolean
-  icon?: IconProp
-  onClick?: (button: HTMLButtonElement) => void
 }
 
 interface IProps {

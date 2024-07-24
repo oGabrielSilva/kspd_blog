@@ -5,14 +5,18 @@ import { useContext, useEffect, useState } from 'react'
 const auth = Auth.fast
 
 export function useAuth() {
-  const { user } = useContext(AuthContext)
+  const { user, profile } = useContext(AuthContext)
 
   const [isAnonymous, setIsAnonymous] = useState(user === null)
-  const [profile, setProfile] = useState<IUser>({ bio: '', social: [], username: '' })
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
     setIsAnonymous(user === null)
   }, [user])
 
-  return { user: user, isAnonymous, handler: auth, profile, setProfile }
+  useEffect(() => {
+    auth.onReady(() => setReady(true))
+  }, [])
+
+  return { user: user, isAnonymous, handler: auth, ready, profile }
 }

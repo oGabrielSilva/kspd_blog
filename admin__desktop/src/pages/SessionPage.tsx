@@ -1,6 +1,6 @@
 import { UIInput } from '@app/components/shared/UIInput'
 import { UIModal } from '@app/components/shared/UIModal'
-import { UITopAppBar } from '@app/components/shared/UITopAppBar'
+import { AuthContext } from '@app/context/AuthContext'
 import { useAuth } from '@app/hooks/useAuth'
 import { closeModal, openModal } from '@app/lib/bulma/modals'
 import { AuthenticationError } from '@app/lib/firebase/constants/AuthenticationError'
@@ -13,13 +13,14 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { ScreenLockerKassiopeiaTool, ValidationKassiopeiaTool } from 'kassiopeia-tools'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const locker = ScreenLockerKassiopeiaTool.fast
 const validation = ValidationKassiopeiaTool.fast
 
 export function SessionPage() {
+  const { updateProfileState } = useContext(AuthContext)
   const auth = useAuth()
   const nav = useNavigate()
 
@@ -62,8 +63,7 @@ export function SessionPage() {
         return
       }
 
-      const profile = await Firestore.fast.setUserData({ bio: '', social: [], username: '' })
-      if (profile) auth.setProfile(profile)
+      await Firestore.fast.setUserData({ bio: '', social: [], pseudonym: '' })
     } catch (error) {
       const { code } = error as FirebaseError
       if (code) {
@@ -88,7 +88,7 @@ export function SessionPage() {
       }
 
       const profile = await Firestore.fast.getUserData()
-      if (profile) auth.setProfile(profile)
+      if (profile) updateProfileState(profile)
     } catch (error) {
       const { code } = error as FirebaseError
       if (code) {
@@ -125,7 +125,6 @@ export function SessionPage() {
 
   return (
     <div>
-      <UITopAppBar />
       <main
         style={{ height: 'calc(100vh - 50px)' }}
         className="container p-5 is-flex is-flex-direction-column is-align-items-center is-justify-content-center"
@@ -172,7 +171,7 @@ export function SessionPage() {
               helper={{
                 design: 'danger',
                 isVisible: payload.password.length > 0 && !payloadValidation.password,
-                label: 'Mínimo de 8 caracteres, um símbolo, pelo menos uma letra maiúscula e uma minúscula',
+                label: 'Mínimo de 8 caracteres, pelo menos uma letra maiúscula e uma minúscula',
               }}
               isDanger={payload.password.length > 0 && !payloadValidation.password}
             />

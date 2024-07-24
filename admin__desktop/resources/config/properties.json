@@ -4,6 +4,9 @@
     "colorSchema": {
       "key": "@key__color_schema",
       "value": { "dark": "DARK", "light": "LIGHT", "system": "SYSTEM" }
+    },
+    "user": {
+      "profileKey": "@key__IUser_profileState"
     }
   }
 }

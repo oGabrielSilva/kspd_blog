@@ -1,24 +1,33 @@
 import { FirebaseApp } from '@app/lib/firebase/FirebaseApp'
-import { generateWinw } from '@app/utils/generateWinw'
-import properties from '@resources/config/properties.json'
-import { listen } from '@tauri-apps/api/event'
-import { WebviewWindow } from '@tauri-apps/api/window'
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, type User } from 'firebase/auth'
+import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
+import { FirebaseError } from 'firebase/app'
+import { EmailAuthProvider, getAuth, reauthenticateWithCredential, signOut, type User } from 'firebase/auth'
+import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
+import { AuthenticationError } from '../constants/AuthenticationError'
 
 interface IObserver {
   id: string
   cb: (user: User | null, ctx: Auth) => void
 }
 
+const locker = ScreenLockerKassiopeiaTool.fast
+
 export class Auth {
   private static instance: Auth
 
   private readonly firebase = FirebaseApp.fast
-  private isReady = false
   private $user: User | null = null
+  private $ready = false
   private observers: IObserver[] = []
+  private readyObservers: Array<() => void> | null = []
 
   public readonly auth = getAuth(this.firebase.app)
+
+  public onReady(cb: () => void) {
+    if (this.$ready) return cb()
+    if (!this.readyObservers) return cb()
+    this.readyObservers?.push(cb)
+  }
 
   public addObserver(id: string, observer: IObserver['cb']) {
     const index = this.observers.findIndex((ob) => ob.id === id)
@@ -31,44 +40,24 @@ export class Auth {
     this.observers = this.observers.filter((ob) => ob.id !== id)
   }
 
-  public reauthenticate() {
-    return new Promise((resolve, reject) => {
-      const user = this.$user
+  public async reAuthentication(password: string) {
+    const isLocked = locker.isLocked()
+    if (!isLocked) locker.lock()
+    let result = false
+    try {
+      const credentials = EmailAuthProvider.credential(this.user?.email ?? '', password)
+      const data = await reauthenticateWithCredential(this.user!, credentials)
+      if (data.user) result = true
+    } catch (error) {
+      console.log(error)
+      if (error instanceof FirebaseError) {
+        toasterKT.danger(AuthenticationError.messages[error.code])
+      } else toasterKT.danger()
+    } finally {
+      if (!isLocked) locker.unlock()
+    }
 
-      if (user?.providerData.find((provider) => provider.providerId === 'google.com')) {
-        const provider = new GoogleAuthProvider()
-        signInWithPopup(this.auth, provider)
-          .then(() => resolve(true))
-          .catch(() => reject(false))
-        return
-      }
-      const label = 'label-reauth00'
-      const windAlreadyExists = WebviewWindow.getByLabel(label)
-      if (windAlreadyExists !== null) {
-        windAlreadyExists.setFocus()
-        reject(false)
-      }
-      generateWinw('/reauth', {
-        center: true,
-        decorations: false,
-        focus: true,
-        height: 600,
-        hiddenTitle: true,
-        width: 580,
-      })
-        .then((wind) => {
-          wind.setFocus()
-
-          const unlisten = listen(properties.sessionUpdatedEventKey, () => {
-            resolve(true)
-            unlisten.then((unl) => unl())
-          })
-        })
-        .catch((err) => {
-          console.log(err)
-          reject(false)
-        })
-    })
+    return result
   }
 
   public async signOut() {
@@ -77,26 +66,25 @@ export class Auth {
   }
 
   public get isLoggedIn() {
-    return new Promise<boolean>((resolve) => {
-      if (this.isReady) return resolve(this.$user !== null)
-
-      this.auth.authStateReady().then(() => {
-        this.isReady = true
-        setTimeout(() => {
-          resolve(this.$user !== null)
-        }, 500)
-      })
-    })
-    // return this.$user !== null
+    return this.isReady && this.$user !== null
   }
 
   public get user() {
     return this.$user
   }
 
+  public get isReady() {
+    return this.$ready
+  }
+
   public static get fast() {
     if (!Auth.instance) {
       Auth.instance = new Auth()
+      Auth.instance.auth.authStateReady().then(() => {
+        Auth.instance.$ready = true
+        Auth.instance.readyObservers?.forEach((ob) => ob())
+        Auth.instance.readyObservers = null
+      })
 
       Auth.instance.auth.onIdTokenChanged((user) => {
         Auth.instance.$user = user
@@ -104,8 +92,6 @@ export class Auth {
           ob.cb(user, Auth.instance)
         })
       })
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(window as any).Auth = Auth
     }
 
     return Auth.instance

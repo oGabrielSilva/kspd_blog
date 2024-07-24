@@ -3,7 +3,6 @@ import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { sendEmailVerification } from 'firebase/auth'
 import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
-import { UITopAppBar } from '../shared/UITopAppBar'
 
 const locker = ScreenLockerKassiopeiaTool.fast
 
@@ -38,7 +37,6 @@ async function confirm() {
 export function UIVerifyEmail() {
   return (
     <>
-      <UITopAppBar />
       <section className="p-5 content h-100 is-flex is-justify-content-center is-flex-direction-column is-align-items-center">
         <h1 className="title">Oopss...</h1>
         <p>Precisamos que você verifique seu e-mail para poder utilizar a plataforma</p>
