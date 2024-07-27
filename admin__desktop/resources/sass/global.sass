@@ -22,6 +22,7 @@
 .tiptap
   :first-child
     margin-top: 0
+
   h1
     color: var(--bulma-title-color)
     font-size: var(--bulma-title-size)
@@ -57,3 +58,73 @@
     float: left
     height: 0
     pointer-events: none
+
+.edited
+  color: var(--bulma-text)
+
+  > p
+    padding-bottom: 0.5rem
+
+  h1
+    color: var(--bulma-title-color)
+    font-size: var(--bulma-title-size)
+    font-weight: var(--bulma-title-weight)
+    line-height: var(--bulma-title-line-height)
+  h2
+    color: var(--bulma-subtitle-color)
+    font-size: 1.5rem
+    font-weight: var(--bulma-subtitle-weight)
+    line-height: var(--bulma-subtitle-line-height)
+  .bar
+    border-bottom: 1px solid var(--bulma-border-weak)
+    border-top: 1px solid var(--bulma-border-weak)
+    position: -webkit-sticky
+    position: sticky
+    top: 0
+    z-index: 9
+    background: var(--bulma-body-background-color)
+    padding: 0.25rem
+    border-radius: var(--bulma-radius) var(--bulma-radius) 0 0
+
+  ul
+    list-style: unset !important
+
+  ul,
+  ol
+    padding: 0.5rem 0 0.5rem 2rem
+
+  a:not(.dropdown a)
+    text-decoration: underline !important
+
+[data-tiptap-editor]
+  border: 1px solid var(--bulma-border)
+  border-top: none
+  border-radius: var(--bulma-radius)
+
+  .bar
+    border-bottom: 1px solid var(--bulma-border-weak)
+    border-top: 1px solid var(--bulma-border-weak)
+    position: -webkit-sticky
+    position: sticky
+    top: 0
+    z-index: 9
+    background: var(--bulma-body-background-color)
+    padding: 0.25rem
+    border-radius: var(--bulma-radius) var(--bulma-radius) 0 0
+
+  [contenteditable]
+    padding: 0.5rem
+    min-height: 150px
+
+  [contenteditable] > p
+    padding-bottom: 0.5rem
+
+  ul
+    list-style: unset !important
+
+  ul,
+  ol
+    padding: 0.5rem 0 0.5rem 2rem
+
+  a:not(.dropdown a)
+    text-decoration: underline !important

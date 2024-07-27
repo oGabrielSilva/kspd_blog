@@ -3,6 +3,7 @@ import { FirebaseApp } from '@app/lib/firebase/FirebaseApp'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import {
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
@@ -37,6 +38,16 @@ export class Firestore {
 
   public removeUserObserver(id: string) {
     this.userObservers = this.userObservers.filter((ob) => ob.id !== id)
+  }
+
+  public async delete(...ref: string[]) {
+    try {
+      await deleteDoc(doc(this.firestore, ref.join('/')))
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   }
 
   public upload(data: WithFieldValue<DocumentData>, ...path: string[]) {

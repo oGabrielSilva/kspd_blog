@@ -1,4 +1,5 @@
 import { TSocialIcon } from '@app/utils/socialIcons'
+import { type Timestamp } from 'firebase/firestore'
 
 export declare global {
   interface IChildren {
@@ -33,8 +34,8 @@ export declare global {
     metaDescription: string
     isLocked: boolean
     createdBy: string
-    createdAt: number
-    updatedAt: number
+    createdAt: Timestamp
+    updatedAt: Timestamp
   }
 
   interface IFont {
@@ -63,7 +64,7 @@ export declare global {
     mediaImage: string | null
     authorID: string
     stacks: Pick<IStack, 'name' | 'description'>[]
-    createdAt: number
-    updatedAt: number
+    createdAt: Timestamp
+    updatedAt: Timestamp
   }
 }

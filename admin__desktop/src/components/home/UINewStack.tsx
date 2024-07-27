@@ -1,11 +1,15 @@
+import { HomeContext } from '@app/context/HomeContext'
 import { useAuth } from '@app/hooks/useAuth'
 import { useStacks } from '@app/hooks/useStacks'
+import { closeModal, openModal } from '@app/lib/bulma/modals'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import { formatDate } from '@app/utils/formatDate'
+import { Timestamp } from 'firebase/firestore'
 import { ScreenLockerKassiopeiaTool, ValidationKassiopeiaTool } from 'kassiopeia-tools'
-import { FormEventHandler, useEffect, useRef, useState } from 'react'
+import { FormEventHandler, useContext, useEffect, useRef, useState } from 'react'
 import { UIInput } from '../shared/UIInput'
+import { UIModal } from '../shared/UIModal'
 import { UITextarea } from '../shared/UITextarea'
 import { BasicEditor } from '../tiptap/basic/BasicEditor'
 
@@ -21,6 +25,8 @@ const anim = toasterKT.animationTool
 
 export function UINewStack() {
   const auth = useAuth()
+  const { setScreen } = useContext(HomeContext)
+
   const { reloadStacks, update: updateStacks } = useStacks()
 
   const [title, setTitle] = useState('')
@@ -35,7 +41,7 @@ export function UINewStack() {
 
   useEffect(() => setTitleValid(validation.isNameValid(title)), [title])
 
-  const submit: FormEventHandler<HTMLFormElement> = async (e) => {
+  const submit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
     if (!isTitleValid) {
       anim.shakeX(titleInputContainerRef.current!)
@@ -49,10 +55,18 @@ export function UINewStack() {
       toasterKT.warn('Você precisa informar uma meta descrição maior. Pelo menos 50 caracteres')
       return
     }
+    if (metaDescription.length > 160) return openModal('more__160chars_alert')
+    upload()
+  }
+
+  async function upload() {
     reloadStacks(async (stacks) => {
       const st = stacks.find((st) => st.name === title)
       if (st) {
-        toasterKT.info(`Stack [${st.name}] já foi criada em ${formatDate(new Date(st.createdAt), 'pt-BR')}`)
+        toasterKT.info(
+          `Stack [${st.name}] foi criada em ${formatDate(new Date(st.createdAt.toDate()), 'pt-BR')}`,
+          10000,
+        )
         return
       }
 
@@ -66,14 +80,15 @@ export function UINewStack() {
             description,
             metaDescription,
             createdBy: auth.user?.uid,
-            createdAt: new Date(),
-            updatedBy: new Date(),
+            createdAt: Timestamp.now(),
+            updatedBy: Timestamp.now(),
           },
           'stacks',
           title,
         )
         if (data) {
           updateStacks([...stacks, data as IStack])
+          setScreen('ALL_STACKS')
         }
       } catch (error) {
         console.log(error)
@@ -131,6 +146,40 @@ export function UINewStack() {
           </button>
         </div>
       </form>
+      <UIModal
+        title="Meta descrição muito grande"
+        id="more__160chars_alert"
+        primaryButton={{
+          label: 'Criar Stack mesmo assim',
+          closeModalOnClick: true,
+          design: 'warning',
+          onClick: upload,
+        }}
+        secondaryButton={{
+          label: 'Cancelar',
+          design: 'link',
+          closeModalOnClick: false,
+          onClick: () => {
+            closeModal('more__160chars_alert', () => {
+              toasterKT.animationTool.shakeX(metaDescriptionInputContainerRef.current!)
+              metaDescriptionInputContainerRef.current?.querySelector('textarea')?.focus()
+            })
+          },
+        }}
+      >
+        <div>
+          <p className="pb-3">
+            A meta descrição tem mais de 160 caracteres. <strong>Criar Stack mesmo assim?</strong>
+          </p>
+          <p className="pb-3">
+            A melhor recomendação sobre o tamanho de uma meta descrição é mantê-la entre 150 e 160 caracteres.
+            Se for maior que isso, o Google, por exemplo, cortará a meta descrição.
+          </p>
+          <p className="pb-3">
+            Tamanho atual: <strong>{metaDescription.length}</strong> caracteres
+          </p>
+        </div>
+      </UIModal>
     </div>
   )
 }
