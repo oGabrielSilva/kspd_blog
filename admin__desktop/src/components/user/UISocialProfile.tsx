@@ -80,7 +80,7 @@ export function UISocialProfile({ toUserTab }: IProps) {
         <h1 className="title p-0 m-0">Edite seus links</h1>
         <button onClick={() => openModal(modalId)} className="button is-link is-small" type="button">
           <span className="icon is-small">
-            <FontAwesomeIcon icon={'add'} />
+            <FontAwesomeIcon aria-hidden icon={'add'} />
           </span>
           <span>Adicionar</span>
         </button>
@@ -103,7 +103,7 @@ export function UISocialProfile({ toUserTab }: IProps) {
           <tbody>
             <tr>
               <th className="has-text-centered">
-                <FontAwesomeIcon icon={socialIcons.email.icon as IconProp} />
+                <FontAwesomeIcon aria-hidden icon={socialIcons.email.icon as IconProp} />
               </th>
               <td>E-mail</td>
               <td>
@@ -113,7 +113,7 @@ export function UISocialProfile({ toUserTab }: IProps) {
               </td>
               <td>
                 <button type="button" onClick={toUserTab} className="button is-small is-warning">
-                  <FontAwesomeIcon icon={'pen-to-square'} />
+                  <FontAwesomeIcon aria-hidden icon={'pen-to-square'} />
                 </button>
               </td>
             </tr>

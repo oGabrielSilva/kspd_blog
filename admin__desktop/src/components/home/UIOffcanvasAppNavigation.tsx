@@ -1,13 +1,15 @@
+import { HomeContext, type TScreen } from '@app/context/HomeContext'
 import { Auth } from '@app/lib/firebase/auth/Auth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AnimationKassiopeiaTool, ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const anim = AnimationKassiopeiaTool.fast
 
 export function UIOffcanvasAppNavigation() {
   const nav = useNavigate()
+  const { screen, setScreen } = useContext(HomeContext)
 
   const [open, setOpen] = useState(false)
   const [pendingAction, setPendingAction] = useState(false)
@@ -15,7 +17,30 @@ export function UIOffcanvasAppNavigation() {
   const container = useRef<HTMLDivElement>(null)
   const menu = useRef<HTMLDivElement>(null)
 
-  const updateState = useCallback(() => {
+  function toScreen(sc: TScreen) {
+    setScreen(sc)
+    updateState()
+  }
+
+  useEffect(() => {
+    const func = (e: MouseEvent) => {
+      if (
+        container.current &&
+        !container.current.contains(e.target as Node) &&
+        menu.current &&
+        !menu.current.contains(e.target as Node) &&
+        open
+      ) {
+        updateState()
+      }
+    }
+    document.addEventListener('click', func)
+
+    return () => document.removeEventListener('click', func)
+  }, [open, updateState])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  function updateState() {
     if (pendingAction) return
     setPendingAction(true)
     setOpen((v) => {
@@ -48,24 +73,7 @@ export function UIOffcanvasAppNavigation() {
 
       return !v
     })
-  }, [pendingAction])
-
-  useEffect(() => {
-    const func = (e: MouseEvent) => {
-      if (
-        container.current &&
-        !container.current.contains(e.target as Node) &&
-        menu.current &&
-        !menu.current.contains(e.target as Node) &&
-        open
-      ) {
-        updateState()
-      }
-    }
-    document.addEventListener('click', func)
-
-    return () => document.removeEventListener('click', func)
-  }, [open, updateState])
+  }
 
   return (
     <div>
@@ -126,21 +134,80 @@ export function UIOffcanvasAppNavigation() {
                 }}
               >
                 <span className="icon is-small">
-                  <FontAwesomeIcon icon="door-open" />
+                  <FontAwesomeIcon aria-hidden icon="door-open" />
                 </span>
                 <span>Sair</span>
               </button>
             </div>
-            <p className="menu-label">General</p>
+            <p className="menu-label">Geral</p>
             <ul className="menu-list">
               <li>
-                <a>Dashboard</a>
+                <a
+                  className={screen === 'DASHBOARD' ? 'is-active' : ''}
+                  onClick={() => toScreen('DASHBOARD')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="gauge" />
+                  </span>
+                  <span>Dashboard</span>
+                </a>
               </li>
               <li>
-                <a>Customers</a>
+                <a
+                  className={screen === 'GLOBAL_POSTS' ? 'is-active' : ''}
+                  onClick={() => toScreen('GLOBAL_POSTS')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="box-open" />
+                  </span>
+                  <span>Todos os posts</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  className={screen === 'ALL_STACKS' ? 'is-active' : ''}
+                  onClick={() => toScreen('ALL_STACKS')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="boxes-stacked" />
+                  </span>
+                  <span>Todas as stacks</span>
+                </a>
               </li>
             </ul>
-            <p className="menu-label">Administration</p>
+            <p className="menu-label">Postagens</p>
+            <ul className="menu-list">
+              <li>
+                <a
+                  className={screen === 'NEW_POST' ? 'is-active' : ''}
+                  onClick={() => toScreen('NEW_POST')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="file-circle-plus" />
+                  </span>
+                  <span>Nova Postagem</span>
+                </a>
+              </li>
+            </ul>
+            <p className="menu-label">Stacks</p>
+            <ul className="menu-list">
+              <li>
+                <a
+                  className={screen === 'NEW_STACK' ? 'is-active' : ''}
+                  onClick={() => toScreen('NEW_STACK')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="layer-group" />
+                  </span>
+                  <span>Nova Stack</span>
+                </a>
+              </li>
+            </ul>
           </aside>
         </nav>
       </div>

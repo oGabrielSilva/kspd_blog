@@ -6,20 +6,13 @@ body {
   height: calc(100vh - 50px);
 }
 
-.gap {
-  gap: 0.25rem;
-}
-
-.gap-1 {
-  gap: 0.5rem;
-}
-
-.gap-2 {
-  gap: 0.75rem;
-}
-
-.gap-3 {
-  gap: 1rem;
+blockquote {
+  border-left: 4px solid var(--bulma-border);
+  padding: 0.5rem 0.5rem 0.5rem 1.5em;
+  margin: 0.5rem 0 0.5rem 0;
+  font-style: italic;
+  background: var(--bulma-code-background);
+  color: var(--bulma-text-bold);
 }
 
 [data-close] {
@@ -47,6 +40,72 @@ body {
 
 [data-page-container]::-webkit-scrollbar {
   display: none;
+}
+
+[data-tiptap-editor] {
+  border: 1px solid var(--bulma-border);
+  border-top: none;
+  border-radius: var(--bulma-radius);
+}
+
+[data-tiptap-editor] .bar {
+  border-bottom: 1px solid var(--bulma-border-weak);
+  border-top: 1px solid var(--bulma-border-weak);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  background: var(--bulma-body-background-color);
+  padding: 0.25rem;
+  border-radius: var(--bulma-radius) var(--bulma-radius) 0 0;
+}
+
+[data-tiptap-editor] [contenteditable] {
+  padding: 0.5rem;
+  min-height: 150px;
+}
+
+[data-tiptap-editor] [contenteditable] > p {
+  padding-bottom: 0.5rem;
+}
+
+[data-tiptap-editor] ul {
+  list-style: unset !important;
+}
+
+[data-tiptap-editor] ul,
+[data-tiptap-editor] ol {
+  padding: 0.5rem 0 0.5rem 2rem;
+}
+
+[data-tiptap-editor] a:not(.dropdown a) {
+  text-decoration: underline !important;
+}
+
+[data-pc-name='colorpicker'] input {
+  width: 2.5rem;
+  height: 1rem;
+  border: none;
+  border-radius: 4px;
+  display: none;
+}
+
+.tiptap[contenteditable]:focus-visible {
+  outline: none;
+}
+
+nav aside a {
+  display: flex !important;
+  gap: 1rem;
+  align-items: center;
+}
+
+nav aside a svg {
+  font-size: 1rem;
+}
+
+.menu-list li {
+  margin-top: 0.25rem;
 }
 
 /*

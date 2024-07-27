@@ -49,11 +49,15 @@ export function UIIconDropdown(props: IProps) {
           style={{ width: '100%' }}
         >
           <span>
-            <FontAwesomeIcon icon={socialIcons[props.selected].icon as IconProp} className="pr-3" />
+            <FontAwesomeIcon
+              aria-hidden
+              icon={socialIcons[props.selected].icon as IconProp}
+              className="pr-3"
+            />
             <span>{socialIcons[props.selected].name}</span>
           </span>
           <span className="icon is-small">
-            <FontAwesomeIcon icon="angle-down" />
+            <FontAwesomeIcon aria-hidden icon="angle-down" />
           </span>
         </button>
       </div>
@@ -83,7 +87,7 @@ export function UIIconDropdown(props: IProps) {
                 style={{ borderRadius: 4 }}
               >
                 <span className="icon is-small">
-                  <FontAwesomeIcon icon={icon.icon as IconProp} />
+                  <FontAwesomeIcon aria-hidden icon={icon.icon as IconProp} />
                 </span>
                 <span>{icon.name}</span>
               </button>

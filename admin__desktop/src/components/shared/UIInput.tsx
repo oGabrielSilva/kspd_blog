@@ -36,7 +36,7 @@ export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(pro
         <input
           ref={ref}
           id={id}
-          className={props.isDanger ? 'is-danger input' : 'input'}
+          className={props.isDanger && props.value.length > 0 ? 'is-danger input' : 'input'}
           type={props.type ?? 'text'}
           placeholder={props.placeholder}
           value={props.value}
@@ -60,7 +60,7 @@ export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(pro
           void 0
         )}
       </div>
-      {props.helper && props.helper.isVisible ? (
+      {props.helper && props.helper.isVisible && props.value.length > 0 ? (
         <p
           className={`help ${props.helper.design && props.helper.design !== 'normal' ? 'is-' + props.helper.design : ''}`}
         >

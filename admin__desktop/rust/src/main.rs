@@ -5,6 +5,7 @@ use serde::{Deserialize};
 use tauri::{Manager, Window};
 use window_shadows::set_shadow;
 use serde_json;
+use uuid::Uuid;
 
 #[derive(Deserialize)]
 struct BaseEvent {
@@ -14,6 +15,11 @@ struct BaseEvent {
 fn define_shadow(window: Window) {
     #[cfg(any(windows, target_os = "macos"))]
     set_shadow(&window, true).unwrap();
+}
+
+#[tauri::command]
+fn uuid_v4() -> String {
+    Uuid::new_v4().to_string()
 }
 
 fn main() {
@@ -37,6 +43,7 @@ fn main() {
 
             Ok(())
         })
+        .invoke_handler(tauri::generate_handler![uuid_v4])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -47,7 +47,7 @@ export function UIVerifyEmail() {
           style={{ marginBottom: 50 }}
         >
           <span className="icon is-small">
-            <FontAwesomeIcon icon="envelope" />
+            <FontAwesomeIcon aria-hidden icon="envelope" />
           </span>
           <span>Me envie o link de confirmação</span>
         </button>
@@ -59,7 +59,7 @@ export function UIVerifyEmail() {
           style={{ position: 'absolute', bottom: '5vh', left: '50%', transform: 'translateX(-50%)' }}
         >
           <span className="icon is-small">
-            <FontAwesomeIcon icon="check-double" className="" />
+            <FontAwesomeIcon aria-hidden icon="check-double" className="" />
           </span>
           <span>Já confirmei</span>
         </button>

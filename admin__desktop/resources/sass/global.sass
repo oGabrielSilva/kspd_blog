@@ -1,0 +1,59 @@
+@for $i from 1 through 8
+
+  $val: $i * 0.25rem
+
+  @if $i == 1
+    .gap
+      gap: $val
+  @else
+    .gap-#{$i - 1}
+      gap: $val
+
+@for $i from 1 through 8
+
+  $val: $i * 1rem
+
+  .tt-indent-#{$i}
+    text-indent: $val
+
+  [data-indent='#{$i}']
+    text-indent: $val
+
+.tiptap
+  :first-child
+    margin-top: 0
+  h1
+    color: var(--bulma-title-color)
+    font-size: var(--bulma-title-size)
+    font-weight: var(--bulma-title-weight)
+    line-height: var(--bulma-title-line-height)
+  h2
+    color: var(--bulma-subtitle-color)
+    font-size: 1.5rem
+    font-weight: var(--bulma-subtitle-weight)
+    line-height: var(--bulma-subtitle-line-height)
+
+  // pre
+  //   background: var(--bulma-black)
+  //   border-radius: 0.5rem
+  //   color: var(--bulma-grey-lighter)
+  //   font-family: "JetBrains Mono", monospace
+  //   margin: 1.5rem 0
+  //   padding: 0.75rem 1rem
+
+  //   code
+  //     background: none
+  //     color: inherit
+  //     font-size: 0.8rem
+  //     padding: 0
+
+  //   /* Code styling */
+  //   .hljs-comment,
+  //   .hljs-quote
+  //     color: var(--bulma-grey)
+  *.is-empty::before
+    color: var(--bulma-grey)
+    content: attr(data-placeholder)
+    float: left
+    height: 0
+    pointer-events: none

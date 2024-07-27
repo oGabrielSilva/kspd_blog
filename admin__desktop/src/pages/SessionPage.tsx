@@ -2,6 +2,7 @@ import { UIInput } from '@app/components/shared/UIInput'
 import { UIModal } from '@app/components/shared/UIModal'
 import { AuthContext } from '@app/context/AuthContext'
 import { useAuth } from '@app/hooks/useAuth'
+import { useStacks } from '@app/hooks/useStacks'
 import { closeModal, openModal } from '@app/lib/bulma/modals'
 import { AuthenticationError } from '@app/lib/firebase/constants/AuthenticationError'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
@@ -21,6 +22,7 @@ const validation = ValidationKassiopeiaTool.fast
 
 export function SessionPage() {
   const { updateProfileState } = useContext(AuthContext)
+  const stacks = useStacks()
   const auth = useAuth()
   const nav = useNavigate()
 
@@ -87,6 +89,7 @@ export function SessionPage() {
         return
       }
 
+      stacks.reloadStacks()
       const profile = await Firestore.fast.getUserData()
       if (profile) updateProfileState(profile)
     } catch (error) {

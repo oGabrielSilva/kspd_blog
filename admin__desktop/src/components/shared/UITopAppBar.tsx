@@ -14,7 +14,10 @@ export function UITopAppBar() {
   const nav = useNavigate()
 
   return (
-    <div className="px-3" style={{ height: 50, width: '100vw' }}>
+    <div
+      className="px-3"
+      style={{ height: 50, width: '100vw', borderBottom: '1px solid var(--bulma-border-weak)' }}
+    >
       <header
         className="is-flex is-justify-content-space-between is-align-items-center"
         data-tauri-drag-region

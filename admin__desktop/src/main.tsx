@@ -1,6 +1,8 @@
 import '@resources/css/bulma/bulma.min.css'
 import '@resources/css/global.css'
 
+import '@resources/sass/global.sass'
+
 import { Startup } from '@app/Startup'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'

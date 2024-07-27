@@ -26,4 +26,44 @@ export declare global {
     icon?: IconProp
     onClick?: (button: HTMLButtonElement) => void
   }
+
+  interface IStack {
+    name: string
+    description: string | null
+    metaDescription: string
+    isLocked: boolean
+    createdBy: string
+    createdAt: number
+    updatedAt: number
+  }
+
+  interface IFont {
+    face: string
+    generic: string
+  }
+
+  interface ILang {
+    code: string
+    label: string
+  }
+
+  interface IPost {
+    uid: string
+    title: string
+    slug: string
+    htmlContent: string
+    description: string
+    metaDescription: string
+    keywords: string[]
+    views: number
+    font: IFont
+    lang: ILang
+    isPublished: boolean
+    isLocked: boolean
+    mediaImage: string | null
+    authorID: string
+    stacks: Pick<IStack, 'name' | 'description'>[]
+    createdAt: number
+    updatedAt: number
+  }
 }

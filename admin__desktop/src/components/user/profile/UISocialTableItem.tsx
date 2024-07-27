@@ -103,7 +103,7 @@ export function UISocialTableItem({ social, profile }: IProps) {
   return (
     <tr>
       <th className="has-text-centered">
-        <FontAwesomeIcon icon={socialIcons[social.icon].icon as IconProp} />
+        <FontAwesomeIcon aria-hidden icon={socialIcons[social.icon].icon as IconProp} />
       </th>
       <td>{social.name}</td>
       <td>
@@ -118,14 +118,14 @@ export function UISocialTableItem({ social, profile }: IProps) {
             type="button"
             className="button is-small is-warning"
           >
-            <FontAwesomeIcon icon={'pen-to-square'} />
+            <FontAwesomeIcon aria-hidden icon={'pen-to-square'} />
           </button>
           <button
             onClick={() => openModal(modalDeleteId)}
             type="button"
             className="button is-small is-danger"
           >
-            <FontAwesomeIcon icon={'trash'} />
+            <FontAwesomeIcon aria-hidden icon={'trash'} />
           </button>
 
           <div className="has-text-left">
@@ -194,7 +194,7 @@ export function UISocialTableItem({ social, profile }: IProps) {
                 <p>
                   <strong>Ícone</strong>:{' '}
                   <span className="icon is-small">
-                    <FontAwesomeIcon icon={socialIcons[social.icon].icon as IconProp} />
+                    <FontAwesomeIcon aria-hidden icon={socialIcons[social.icon].icon as IconProp} />
                   </span>
                 </p>
                 <p>

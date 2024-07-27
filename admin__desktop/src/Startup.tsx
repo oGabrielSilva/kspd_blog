@@ -1,13 +1,16 @@
 import AuthContextProvider from '@app/context/AuthContext'
+import ColorSchemaContextProvider from '@app/context/ColorSchemaContext'
+import StackContextProvider from '@app/context/StackContext'
 import { Router } from '@app/router/Router'
-import ColorSchemaContextProvider from './context/ColorSchemaContext'
 
 export function Startup() {
   return (
     <div>
       <ColorSchemaContextProvider>
         <AuthContextProvider>
-          <Router />
+          <StackContextProvider>
+            <Router />
+          </StackContextProvider>
         </AuthContextProvider>
       </ColorSchemaContextProvider>
     </div>

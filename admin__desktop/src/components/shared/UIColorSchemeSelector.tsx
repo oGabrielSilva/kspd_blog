@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 
 export function UIColorSchemeSelector() {
-  const [isActive, setActive] = useState(false)
   const { schema, setSchema } = useColorSchema()
+  const [isActive, setActive] = useState(false)
 
   const button = useRef<HTMLButtonElement>(null)
 

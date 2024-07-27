@@ -15,7 +15,7 @@ export function UserPage() {
             <li className={tab === 'SOCIAL' ? 'is-active' : ''}>
               <a role="button" onClick={() => setTab('SOCIAL')}>
                 <span className="icon is-small">
-                  <FontAwesomeIcon icon="network-wired" />
+                  <FontAwesomeIcon aria-hidden icon="network-wired" />
                 </span>
                 <span>Social</span>
               </a>
@@ -24,7 +24,7 @@ export function UserPage() {
             <li className={tab === 'PROFILE' ? 'is-active' : ''}>
               <a role="button" onClick={() => setTab('PROFILE')}>
                 <span className="icon is-small">
-                  <FontAwesomeIcon icon="user-tie" />
+                  <FontAwesomeIcon aria-hidden icon="user-tie" />
                 </span>
                 <span>Perfil</span>
               </a>

@@ -87,7 +87,7 @@ export function UIPasswordModifier() {
     <div>
       <button onClick={() => openModal('modal__password_modifier')} className="button is-ghost px-0">
         <span className="icon is-small">
-          <FontAwesomeIcon icon="gear" />
+          <FontAwesomeIcon aria-hidden icon="gear" />
         </span>
         <span>Quero trocar minha senha</span>
       </button>

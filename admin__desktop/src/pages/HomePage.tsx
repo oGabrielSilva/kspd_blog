@@ -1,11 +1,16 @@
+import { UIAllStacks } from '@app/components/home/UIAllStacks'
+import { UINewPost } from '@app/components/home/UINewPost'
+import { UINewStack } from '@app/components/home/UINewStack'
 import { UIVerifyEmail } from '@app/components/home/UIVerifyEmail'
+import { HomeContext } from '@app/context/HomeContext'
 import { useAuth } from '@app/hooks/useAuth'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function HomePage() {
   const auth = useAuth()
   const nav = useNavigate()
+  const { screen } = useContext(HomeContext)
 
   const [userVerified, setUserVerified] = useState(auth.user?.emailVerified ?? false)
 
@@ -22,5 +27,13 @@ export function HomePage() {
     if (auth.isAnonymous) nav('/session')
   }, [auth, nav])
 
-  return (auth.isAnonymous && <div />) || !userVerified ? <UIVerifyEmail /> : <div />
+  return (auth.isAnonymous && <div />) || !userVerified ? (
+    <UIVerifyEmail />
+  ) : (
+    <div className="container p-5">
+      {(screen === 'NEW_POST' && <UINewPost />) ||
+        (screen === 'NEW_STACK' && <UINewStack />) ||
+        (screen === 'ALL_STACKS' && <UIAllStacks />)}
+    </div>
+  )
 }

@@ -1,7 +1,18 @@
 import { Auth } from '@app/lib/firebase/auth/Auth'
 import { FirebaseApp } from '@app/lib/firebase/FirebaseApp'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
-import { doc, getDoc, getFirestore, setDoc } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  QueryFieldFilterConstraint,
+  setDoc,
+  WithFieldValue,
+} from 'firebase/firestore'
 
 interface IObserver {
   id: string
@@ -26,6 +37,65 @@ export class Firestore {
 
   public removeUserObserver(id: string) {
     this.userObservers = this.userObservers.filter((ob) => ob.id !== id)
+  }
+
+  public upload(data: WithFieldValue<DocumentData>, ...path: string[]) {
+    const user = Auth.fast.user
+    return new Promise<typeof data>((resolve, reject) => {
+      try {
+        if (!user) {
+          toasterKT.danger('Permissão negada. Usuário não definido')
+          return reject(null)
+        }
+        setDoc(doc(this.firestore, path.join('/')), data).then(() => {
+          resolve(data)
+        })
+      } catch (error) {
+        console.log(error)
+        toasterKT.danger()
+        reject(error)
+      }
+    })
+  }
+
+  public async getDocs(...path: string[]) {
+    try {
+      const user = Auth.fast.user
+      if (!user) {
+        toasterKT.danger('Permissão negada. Usuário não definido')
+        return null
+      }
+
+      const q = query(collection(this.firestore, path.join('/')))
+
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.empty ? [] : querySnapshot.docs
+    } catch (error) {
+      console.log(error)
+      toasterKT.danger()
+      return null
+    }
+  }
+
+  public async getDocsWhere(where: QueryFieldFilterConstraint | null, ...path: string[]) {
+    try {
+      const user = Auth.fast.user
+      if (!user) {
+        toasterKT.danger('Permissão negada. Usuário não definido')
+        return null
+      }
+
+      const q = where
+        ? query(collection(this.firestore, path.join('/')), where)
+        : query(collection(this.firestore, path.join('/')))
+
+      const querySnapshot = await getDocs(q)
+      return querySnapshot.empty ? [] : querySnapshot.docs
+    } catch (error) {
+      console.log(error)
+      toasterKT.danger()
+      return null
+    }
   }
 
   public setUserData(data: IUser) {
@@ -61,6 +131,7 @@ export class Firestore {
     } catch (error) {
       console.log(error)
       toasterKT.danger()
+      return null
     }
   }
 

@@ -1,4 +1,5 @@
 import { UITopAppBar } from '@app/components/shared/UITopAppBar'
+import HomeContextProvider from '@app/context/HomeContext'
 import { HomePage } from '@app/pages/HomePage'
 import { SessionPage } from '@app/pages/SessionPage'
 import { UserPage } from '@app/pages/UserPage'
@@ -15,9 +16,11 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Page>
-        <HomePage />
-      </Page>
+      <HomeContextProvider>
+        <Page>
+          <HomePage />
+        </Page>
+      </HomeContextProvider>
     ),
   },
   {

@@ -88,7 +88,7 @@ export function UIModal(props: IProps) {
                 >
                   {props.secondaryButton.icon && (
                     <span className="icon is-small">
-                      <FontAwesomeIcon icon={props.secondaryButton.icon} />
+                      <FontAwesomeIcon aria-hidden icon={props.secondaryButton.icon} />
                     </span>
                   )}
                   {props.secondaryButton.label}
@@ -111,7 +111,7 @@ export function UIModal(props: IProps) {
                 >
                   {props.primaryButton.icon && (
                     <span className="icon is-small">
-                      <FontAwesomeIcon icon={props.primaryButton.icon} />
+                      <FontAwesomeIcon aria-hidden icon={props.primaryButton.icon} />
                     </span>
                   )}
                   {props.primaryButton.label}
