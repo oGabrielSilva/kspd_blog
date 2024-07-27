@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from '@app/hooks/useAuth'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
@@ -6,7 +6,9 @@ import properties from '@resources/config/properties.json'
 
 interface IStackContext {
   stacks: IStack[]
-  update: (state: IStack[]) => void
+  editStack: IStack | null
+  setEditStack: Dispatch<SetStateAction<IStack | null>>
+  update: (newState: IStack[]) => void
   reloadStacks: (onComplete?: (stacks: IStack[]) => void) => void
 }
 
@@ -24,6 +26,7 @@ export const StackContext = createContext({} as IStackContext)
 
 export default function StackContextProvider({ children }: IChildren) {
   const [stacks, setStacks] = useState<IStack[]>($recoveryStacksState())
+  const [editStack, setEditStack] = useState<IStack | null>(null)
 
   const auth = useAuth()
 
@@ -54,6 +57,8 @@ export default function StackContextProvider({ children }: IChildren) {
     <StackContext.Provider
       value={{
         stacks,
+        editStack,
+        setEditStack,
         update: (state) => {
           $setStacksState(state)
           setStacks(state)

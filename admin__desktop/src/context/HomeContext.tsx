@@ -5,11 +5,12 @@ export type TScreen =
   | 'GLOBAL_POSTS'
   | 'NEW_POST'
   | 'USER_POSTS'
-  | 'NEW_STACK'
-  | 'ALL_STACKS'
   | 'MANAGE_POSTS'
-  | 'MANAGE_USERS'
+  | 'NEW_STACK'
+  | 'EDIT_STACK'
   | 'MANAGE_STACKS'
+  | 'ALL_STACKS'
+  | 'MANAGE_USERS'
 
 interface IHomeContext {
   screen: TScreen

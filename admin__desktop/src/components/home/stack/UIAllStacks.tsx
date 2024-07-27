@@ -2,7 +2,7 @@ import { HomeContext } from '@app/context/HomeContext'
 import { useStacks } from '@app/hooks/useStacks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
-import { UIStackTableItem } from './stack/UIStackTableItem'
+import { UIStackTableItem } from './UIStackTableItem'
 
 export function UIAllStacks() {
   const { stacks } = useStacks()

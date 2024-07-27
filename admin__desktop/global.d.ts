@@ -29,11 +29,13 @@ export declare global {
   }
 
   interface IStack {
+    uid: string
     name: string
     description: string | null
     metaDescription: string
     isLocked: boolean
     createdBy: string
+    updatedBy: string
     createdAt: Timestamp
     updatedAt: Timestamp
   }

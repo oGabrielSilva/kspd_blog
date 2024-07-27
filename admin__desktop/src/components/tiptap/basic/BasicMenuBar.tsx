@@ -164,7 +164,7 @@ export function BasicMenuBar({ editor, font, setFont }: IProps) {
         </button>
         <div>
           <button
-            className={'button is-text'}
+            className={'color button is-text'}
             type="button"
             onClick={(e) => {
               e.currentTarget.parentElement?.querySelector('input')?.click()
@@ -190,9 +190,10 @@ export function BasicMenuBar({ editor, font, setFont }: IProps) {
             }}
           />
         </div>
+
         <div>
           <button
-            className={'button is-text'}
+            className={'bgColor button is-text'}
             type="button"
             onClick={(e) => {
               e.currentTarget.parentElement?.querySelector('input')?.click()
@@ -218,6 +219,16 @@ export function BasicMenuBar({ editor, font, setFont }: IProps) {
             }}
           />
         </div>
+
+        <button
+          className={'clearColorAndHighLight button is-text'}
+          type="button"
+          onClick={() => editor.chain().focus().unsetColor().unsetHighlight().run()}
+        >
+          <span className="icon is-small">
+            <FontAwesomeIcon aria-hidden icon="droplet-slash" />
+          </span>
+        </button>
 
         <div>
           <button

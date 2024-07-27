@@ -1,4 +1,5 @@
 import { UIModal } from '@app/components/shared/UIModal'
+import { HomeContext } from '@app/context/HomeContext'
 import { StackContext } from '@app/context/StackContext'
 import { openModal } from '@app/lib/bulma/modals'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
@@ -14,7 +15,9 @@ interface IProps {
 }
 
 export function UIStackTableItem({ stack, index }: IProps) {
-  const { update, stacks } = useContext(StackContext)
+  const { update, stacks, setEditStack } = useContext(StackContext)
+  const { setScreen } = useContext(HomeContext)
+
   const modalDeleteId = '___stackDelete__stackName_' + index
 
   async function deleteFn() {
@@ -33,6 +36,11 @@ export function UIStackTableItem({ stack, index }: IProps) {
     } finally {
       locker.unlock()
     }
+  }
+
+  function toEdit() {
+    setEditStack(stack)
+    setScreen('EDIT_STACK')
   }
 
   return (
@@ -66,7 +74,7 @@ export function UIStackTableItem({ stack, index }: IProps) {
       <td>{minimizeText(stack.metaDescription)}</td>
       <td>
         <div className="buttons is-justify-content-center has-text-left">
-          <button type="button" className="button is-small is-warning">
+          <button type="button" className="button is-small is-warning" onClick={toEdit}>
             <FontAwesomeIcon aria-hidden icon={'pen-to-square'} />
           </button>
           <button
