@@ -5,7 +5,7 @@ import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ImageKassiopeiaProcessingTool, ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
-import type { IIMG } from '../UINewPost'
+import { IIMG } from './UINewPost'
 
 interface IProps {
   img: IIMG
@@ -43,6 +43,7 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
       try {
         const blob = await ImageKassiopeiaProcessingTool.fast.convertFileToWebpBlobWithoutClipping(
           imageInputRef.current.files[0],
+          0.75,
         )
 
         closeModal(imgModalId)
@@ -68,7 +69,6 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
         role="button"
         className="image is-3by1 is-clickable pb-4"
         src={img.src}
-        alt="strings.postImgAlt"
         onClick={() => openModal(imgModalId)}
       />
 

@@ -6,9 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { appWindow } from '@tauri-apps/api/window'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+interface IProps {
+  removeGoBackButton?: boolean
+  removeAvatar?: boolean
+  removeOffcanvas?: boolean
+}
+
 const routesExcludedGoBack = ['/session', '/']
 
-export function UITopAppBar() {
+export function UITopAppBar(props: IProps) {
   const auth = useAuth()
   const location = useLocation()
   const nav = useNavigate()
@@ -24,7 +30,7 @@ export function UITopAppBar() {
         style={{ height: '100%' }}
       >
         <div className="is-flex is-align-items-center gap-3">
-          {!auth.isAnonymous ? (
+          {!auth.isAnonymous && !props.removeOffcanvas ? (
             <div>
               <UIOffcanvasAppNavigation />
             </div>
@@ -37,7 +43,7 @@ export function UITopAppBar() {
         </div>
 
         <div className="is-flex is-align-items-center gap-3">
-          {routesExcludedGoBack.includes(location.pathname) ? (
+          {routesExcludedGoBack.includes(location.pathname) || props.removeGoBackButton ? (
             void 0
           ) : (
             <div>
@@ -51,7 +57,7 @@ export function UITopAppBar() {
           <div>
             <UIColorSchemeSelector />
           </div>
-          {auth.isAnonymous || location.pathname === '/user' ? (
+          {auth.isAnonymous || location.pathname === '/user' || props.removeAvatar ? (
             void 0
           ) : (
             <div className="mr-5">

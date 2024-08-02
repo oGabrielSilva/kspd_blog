@@ -2,6 +2,7 @@ import { UIInput } from '@app/components/shared/UIInput'
 import { UIModal } from '@app/components/shared/UIModal'
 import { UITextarea } from '@app/components/shared/UITextarea'
 import { BasicEditor } from '@app/components/tiptap/basic/BasicEditor'
+import { defaultFont } from '@app/components/tiptap/basic/UIDropdownFontFamily'
 import { HomeContext } from '@app/context/HomeContext'
 import { StackContext } from '@app/context/StackContext'
 import { useAuth } from '@app/hooks/useAuth'
@@ -34,7 +35,7 @@ export function UIEditStack() {
   const [title, setTitle] = useState(editStack?.name ?? '')
   const [isTitleValid, setTitleValid] = useState(validation.isNameValid(editStack?.name ?? ''))
 
-  const [description, setDescription] = useState(editStack?.description ?? '')
+  const [description, setDescription] = useState(editStack?.description ?? { content: '', font: defaultFont })
   const [metaDescription, setMetaDescription] = useState(editStack?.metaDescription ?? '')
 
   const titleInputContainerRef = useRef<HTMLDivElement>(null)
@@ -136,8 +137,9 @@ export function UIEditStack() {
         <div ref={descriptionInputContainerRef} className="py-3">
           <label className="label">Descrição</label>
           <BasicEditor
-            content={description}
-            onUpdate={(descriptionHTML) => setDescription(descriptionHTML)}
+            font={description.font}
+            content={description.content ?? ''}
+            onUpdate={(content, font) => setDescription({ content, font })}
           />
         </div>
 

@@ -25,7 +25,7 @@ export function UIStackTableItem({ stack, index }: IProps) {
 
     locker.lock()
     try {
-      const result = await Firestore.fast.delete('stacks', stack.name)
+      const result = await Firestore.fast.delete('stacks', stack.uid)
       if (result) {
         toasterKT.success(`Sucesso. Stack [${stack.name}] apagada`)
         update(stacks.filter((st) => st.name !== stack.name))
@@ -63,7 +63,11 @@ export function UIStackTableItem({ stack, index }: IProps) {
                 id={'___stackDesc__stackName_' + index}
                 secondaryButton={{ label: 'Fechar' }}
               >
-                <div dangerouslySetInnerHTML={{ __html: stack.description ?? '' }} className="edited" />
+                <div
+                  dangerouslySetInnerHTML={{ __html: stack.description.content ?? '' }}
+                  className="edited"
+                  style={(!!stack.description.font && { fontFamily: stack.description.font }) || {}}
+                />
               </UIModal>
             </div>
           </>

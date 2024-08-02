@@ -1,7 +1,20 @@
 import { TSocialIcon } from '@app/utils/socialIcons'
 import { type Timestamp } from 'firebase/firestore'
+import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
 
 export declare global {
+  type IFontName =
+    | 'Inter'
+    | 'Lato'
+    | 'Roboto'
+    | 'PT Serif'
+    | 'JetBrains Mono'
+    | 'Tinos'
+    | 'Reddit Mono'
+    | 'Reddit Sans'
+    | 'IBM Plex Serif'
+    | 'IBM Plex Mono'
+
   interface IChildren {
     children: JSX.Element
   }
@@ -28,10 +41,18 @@ export declare global {
     onClick?: (button: HTMLButtonElement) => void
   }
 
+  interface IMedia {
+    src: string
+    description: string
+    figcaption: string
+    loadType: 'eager' | 'lazy'
+    type: 'IMAGE'
+  }
+
   interface IStack {
     uid: string
     name: string
-    description: string | null
+    description: { content: string | null; font: IFontName | null }
     metaDescription: string
     isLocked: boolean
     createdBy: string
@@ -45,28 +66,32 @@ export declare global {
     generic: string
   }
 
-  interface ILang {
-    code: string
-    label: string
-  }
-
   interface IPost {
     uid: string
     title: string
     slug: string
     htmlContent: string
-    description: string
+    description: { content: string | null; font: IFontName | null }
     metaDescription: string
     keywords: string[]
     views: number
-    font: IFont
-    lang: ILang
+    font: IFontName
     isPublished: boolean
     isLocked: boolean
-    mediaImage: string | null
+    mediaImage: IMedia | null
+    contentMedia: IMedia[] | null | undefined
     authorID: string
-    stacks: Pick<IStack, 'name' | 'description'>[]
+    stacks: Pick<IStack, 'uid' | 'name' | 'description'>[]
     createdAt: Timestamp
     updatedAt: Timestamp
   }
+
+  interface IPostDraft {
+    uid: string
+    content: string
+    font: IFontName
+  }
+
+  // eslint-disable-next-line no-var
+  var locker: ScreenLockerKassiopeiaTool
 }

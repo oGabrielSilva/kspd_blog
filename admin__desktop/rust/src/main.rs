@@ -44,6 +44,7 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![uuid_v4])
+        .plugin(tauri_plugin_store::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -2,6 +2,7 @@ import AuthContextProvider from '@app/context/AuthContext'
 import ColorSchemaContextProvider from '@app/context/ColorSchemaContext'
 import StackContextProvider from '@app/context/StackContext'
 import { Router } from '@app/router/Router'
+import PostContextProvider from './context/PostContext'
 
 export function Startup() {
   return (
@@ -9,7 +10,9 @@ export function Startup() {
       <ColorSchemaContextProvider>
         <AuthContextProvider>
           <StackContextProvider>
-            <Router />
+            <PostContextProvider>
+              <Router />
+            </PostContextProvider>
           </StackContextProvider>
         </AuthContextProvider>
       </ColorSchemaContextProvider>

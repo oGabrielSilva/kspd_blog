@@ -1,7 +1,9 @@
+import { UIAllPosts } from '@app/components/home/post/UIAllPosts'
+import { UINewPost } from '@app/components/home/post/UINewPost'
+import { UIUserPosts } from '@app/components/home/post/UIUserPosts'
 import { UIAllStacks } from '@app/components/home/stack/UIAllStacks'
 import { UIEditStack } from '@app/components/home/stack/UIEditStack'
 import { UINewStack } from '@app/components/home/stack/UINewStack'
-import { UINewPost } from '@app/components/home/UINewPost'
 import { UIVerifyEmail } from '@app/components/home/UIVerifyEmail'
 import { HomeContext } from '@app/context/HomeContext'
 import { useAuth } from '@app/hooks/useAuth'
@@ -33,6 +35,8 @@ export function HomePage() {
   ) : (
     <div className="container p-5">
       {(screen === 'NEW_POST' && <UINewPost />) ||
+        (screen === 'ALL_POSTS' && <UIAllPosts />) ||
+        (screen === 'USER_POSTS' && <UIUserPosts />) ||
         (screen === 'NEW_STACK' && <UINewStack />) ||
         (screen === 'EDIT_STACK' && <UIEditStack />) ||
         (screen === 'ALL_STACKS' && <UIAllStacks />)}

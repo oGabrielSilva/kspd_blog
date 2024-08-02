@@ -1,3 +1,4 @@
+import { Figure } from '@app/lib/tiptap/Figure'
 import Blockquote from '@tiptap/extension-blockquote'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Color from '@tiptap/extension-color'
@@ -30,11 +31,13 @@ import html from 'highlight.js/lib/languages/xml'
 import 'highlight.js/styles/github-dark.min.css'
 import { common, createLowlight } from 'lowlight'
 import { useEffect, useRef, useState } from 'react'
-import { BasicMenuBar } from './BasicMenuBar'
+import { PostEditorMenuBar } from './PostEditorMenuBar'
 
 interface IProps {
   content: string
   font?: IFontName | null
+  post: IPost
+  disabled: boolean
   onUpdate: (html: string, font: IFontName) => void
 }
 
@@ -118,9 +121,10 @@ const extensions = [
       return 'Escreva aqui...'
     },
   }),
+  Figure.configure({ HTMLAttributes: { loading: 'lazy' } }),
 ]
 
-export function BasicEditor({ content, onUpdate, font: fontFamily }: IProps) {
+export function PostEditor({ content, onUpdate, font: fontFamily, post, disabled }: IProps) {
   const [font, setFont] = useState(fontFamily ?? 'Inter')
 
   const container = useRef<HTMLDivElement>(null)
@@ -160,9 +164,15 @@ export function BasicEditor({ content, onUpdate, font: fontFamily }: IProps) {
   }, [editor])
 
   return (
-    <div ref={container} data-tiptap-editor className="pb-3" style={{ fontFamily: font }}>
-      <BasicMenuBar font={font} setFont={setFont} editor={editor} />
-      <EditorContent editor={editor} />
+    <div
+      ref={container}
+      data-tiptap-editor
+      data-tiptap-post-editor
+      className="pb-3"
+      style={{ fontFamily: font, height: '100%', borderRadius: 0, border: 'none' }}
+    >
+      <PostEditorMenuBar post={post} font={font} setFont={setFont} editor={editor} />
+      <EditorContent disabled={disabled} editor={editor} style={{ padding: '0.25rem 0.15rem' }} />
     </div>
   )
 }

@@ -18,6 +18,7 @@ interface IProps {
   }
   onImputed?: (value: string, input: HTMLInputElement) => void
   extra?: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+  size?: 'small' | 'normal' | 'medium' | 'large'
 }
 
 export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(props, ref) {
@@ -36,7 +37,9 @@ export const UIInput = forwardRef<HTMLInputElement, IProps>(function UIInput(pro
         <input
           ref={ref}
           id={id}
-          className={props.isDanger && props.value.length > 0 ? 'is-danger input' : 'input'}
+          className={(props.isDanger && props.value.length > 0 ? 'is-danger input' : 'input').concat(
+            props.size ? ` is-${props.size}` : ' is-normal',
+          )}
           type={props.type ?? 'text'}
           placeholder={props.placeholder}
           value={props.value}

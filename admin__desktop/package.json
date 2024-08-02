@@ -35,13 +35,14 @@
     "@tiptap/starter-kit": "^2.5.6",
     "@weiruo/tiptap-extension-indent": "^2.0.4-1",
     "firebase": "^10.12.4",
-    "kassiopeia-tools": "^1.6.8",
+    "kassiopeia-tools": "^1.7.1",
     "lowlight": "^3.1.0",
     "primereact": "^10.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.25.1",
-    "sass": "^1.77.8"
+    "sass": "^1.77.8",
+    "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store#v1"
   },
   "devDependencies": {
     "@eslint/compat": "^1.1.1",

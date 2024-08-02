@@ -2,11 +2,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 
 interface IProps {
-  font: string
-  onChange: (font: string) => void
+  id: string
+  font: IFontName
+  onChange: (font: IFontName) => void
+  openUP?: boolean
+  isSmall?: boolean
+  borderless?: boolean
 }
 
-export function UIDropdownFontFamily({ onChange, font }: IProps) {
+export const fonts: IFontName[] = [
+  'Inter',
+  'Lato',
+  'Roboto',
+  'PT Serif',
+  'JetBrains Mono',
+  'Tinos',
+  'Reddit Mono',
+  'Reddit Sans',
+  'IBM Plex Serif',
+  'IBM Plex Mono',
+]
+
+export const defaultFont = fonts[0]
+
+export function UIDropdownFontFamily({ onChange, font, ...props }: IProps) {
   const [isActive, setActive] = useState(false)
 
   const button = useRef<HTMLButtonElement>(null)
@@ -28,108 +47,41 @@ export function UIDropdownFontFamily({ onChange, font }: IProps) {
   }
 
   return (
-    <div className={'dropdown is-up'.concat(isActive ? ' is-active' : '')}>
+    <div className={`dropdown${props.openUP ? ' is-up' : ''}`.concat(isActive ? ' is-active' : '')}>
       <div className="dropdown-trigger">
         <button
           ref={button}
           type="button"
-          className="button is-small"
+          className={'button'.concat(props.isSmall ? 'is-small' : '')}
           aria-haspopup="true"
-          aria-controls="menu__dropdown_fm"
-          style={{ fontFamily: font, border: 'none', boxShadow: 'none' }}
+          aria-controls={props.id}
+          style={{ fontFamily: font, ...(props.borderless ? { border: 'none', boxShadow: 'none' } : {}) }}
           onClick={() => setActive((act) => !act)}
         >
           <span>{font}</span>
           <span className="icon is-small">
-            <FontAwesomeIcon aria-hidden icon="angle-down" />
+            <FontAwesomeIcon aria-hidden icon={props.openUP ? 'angle-up' : 'angle-down'} />
           </span>
         </button>
       </div>
-      <div className="dropdown-menu" id="menu__dropdown_fm" role="menu">
+      <div className="dropdown-menu" id={props.id} role="menu">
         <div
           className="dropdown-content px-1"
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem' }}
         >
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Inter') ? ' is-active' : '')}
-            onClick={() => onChange('Inter')}
-            style={{ border: 'none', fontFamily: 'Inter' }}
-          >
-            Inter
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Lato') ? ' is-active' : '')}
-            onClick={() => onChange('Lato')}
-            style={{ border: 'none', fontFamily: 'Lato' }}
-          >
-            Lato
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Roboto') ? ' is-active' : '')}
-            onClick={() => onChange('Roboto')}
-            style={{ border: 'none', fontFamily: 'Roboto' }}
-          >
-            Roboto
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('PT Serif') ? ' is-active' : '')}
-            onClick={() => onChange('PT Serif')}
-            style={{ border: 'none', fontFamily: 'PT Serif' }}
-          >
-            PT Serif
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('JetBrains Mono') ? ' is-active' : '')}
-            onClick={() => onChange('JetBrains Mono')}
-            style={{ border: 'none', fontFamily: 'JetBrains Mono' }}
-          >
-            JetBrains Mono
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Tinos') ? ' is-active' : '')}
-            onClick={() => onChange('Tinos')}
-            style={{ border: 'none', fontFamily: 'Tinos' }}
-          >
-            Tinos
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Reddit Mono') ? ' is-active' : '')}
-            onClick={() => onChange('Reddit Mono')}
-            style={{ border: 'none', fontFamily: 'Reddit Mono' }}
-          >
-            Reddit Mono
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('Reddit Sans') ? ' is-active' : '')}
-            onClick={() => onChange('Reddit Sans')}
-            style={{ border: 'none', fontFamily: 'Reddit Sans' }}
-          >
-            Reddit Sans
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('IBM Plex Serif') ? ' is-active' : '')}
-            onClick={() => onChange('IBM Plex Serif')}
-            style={{ border: 'none', fontFamily: 'IBM Plex Serif' }}
-          >
-            IBM Plex Serif
-          </button>
-          <button
-            type="button"
-            className={'button dropdown-item'.concat(isFont('IBM Plex Mono') ? ' is-active' : '')}
-            onClick={() => onChange('IBM Plex Mono')}
-            style={{ border: 'none', fontFamily: 'IBM Plex Mono' }}
-          >
-            IBM Plex Mono
-          </button>
+          {fonts.map((font, index) => {
+            return (
+              <button
+                key={index}
+                type="button"
+                className={'button dropdown-item'.concat(isFont(font) ? ' is-active' : '')}
+                onClick={() => onChange(font)}
+                style={{ border: 'none', fontFamily: font }}
+              >
+                {font}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

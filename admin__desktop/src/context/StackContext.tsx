@@ -2,56 +2,88 @@ import { createContext, Dispatch, SetStateAction, useCallback, useEffect, useSta
 
 import { useAuth } from '@app/hooks/useAuth'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
+import { Store } from '@app/lib/tauri-plugin-store/Store'
 import properties from '@resources/config/properties.json'
+import { listen } from '@tauri-apps/api/event'
 
 interface IStackContext {
   stacks: IStack[]
   editStack: IStack | null
   setEditStack: Dispatch<SetStateAction<IStack | null>>
-  update: (newState: IStack[]) => void
+  update: (newState: IStack[], onComplete?: () => void) => void
   reloadStacks: (onComplete?: (stacks: IStack[]) => void) => void
 }
 
-const $recoveryStacksState = () => {
-  const data = localStorage.getItem(properties.storage.stacks.storageKey)
+export const reloadStackEventId = 'reload-stacks-from-local'
+
+const $recoveryStacksState = async () => {
+  // const data = localStorage.getItem(properties.storage.stack.storageKey)
+  // if (!data) return []
+  // const final = JSON.parse(data) as IStack[]
+  // return Array.isArray(final) ? final : []
+  const data = await Store.get<IStack[]>(properties.storage.stack.storageKey)
+  console.log({ data })
   if (!data) return []
-  const final = JSON.parse(data) as IStack[]
-  return Array.isArray(final) ? final : []
+  return Array.isArray(data) ? data : []
 }
 
-const $setStacksState = (state: IStack[]) =>
-  localStorage.setItem(properties.storage.stacks.storageKey, JSON.stringify(state))
+const $setStacksState = async (state: IStack[]) => {
+  // localStorage.setItem(properties.storage.stack.storageKey, JSON.stringify(state))
+  await Store.save(state, properties.storage.stack.storageKey)
+}
 
 export const StackContext = createContext({} as IStackContext)
 
 export default function StackContextProvider({ children }: IChildren) {
-  const [stacks, setStacks] = useState<IStack[]>($recoveryStacksState())
+  const [loaded, setLoaded] = useState(false)
+  const [stacks, setStacks] = useState<IStack[]>([])
   const [editStack, setEditStack] = useState<IStack | null>(null)
 
   const auth = useAuth()
 
   const reloadStacks = useCallback<IStackContext['reloadStacks']>((onLoad) => {
+    let sts = [] as IStack[]
     Firestore.fast
       .getDocs('stacks')
       .then((data) => {
         if (data) {
-          const sts = data.map((d) => d.data() as IStack)
+          sts = data.map((d) => d.data() as IStack)
           setStacks(sts)
           $setStacksState(sts)
-          if (onLoad) onLoad(sts)
         }
       })
       .catch(() => setStacks([]))
+      .finally(() => {
+        if (onLoad) onLoad(sts)
+      })
   }, [])
+
+  useEffect(() => {
+    if (!loaded) {
+      setLoaded(true)
+      $recoveryStacksState().then((s) => setStacks(s))
+    }
+  }, [loaded])
 
   useEffect(() => {
     const obID = 'stacks__ctx__observerid'
     auth.handler.addObserver(obID, (user) => {
-      if (!user) localStorage.removeItem(properties.storage.stacks.storageKey)
+      if (!user) Store.remove(properties.storage.stack.storageKey)
     })
 
     return () => auth.handler.removeObserver(obID)
   }, [auth])
+
+  useEffect(() => {
+    const unlisten = listen(reloadStackEventId, async () => {
+      setStacks(await $recoveryStacksState())
+    })
+
+    return () =>
+      (() => {
+        unlisten.then((ul) => ul())
+      })()
+  }, [])
 
   return (
     <StackContext.Provider
@@ -59,9 +91,11 @@ export default function StackContextProvider({ children }: IChildren) {
         stacks,
         editStack,
         setEditStack,
-        update: (state) => {
+        update: (state, onComplete?: () => void) => {
           $setStacksState(state)
           setStacks(state)
+
+          if (onComplete) onComplete()
         },
         reloadStacks,
       }}

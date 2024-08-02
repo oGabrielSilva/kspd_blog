@@ -80,7 +80,7 @@ export function UIOffcanvasAppNavigation() {
       <button
         type="button"
         className={'navbar-burger'.concat(open ? ' is-active' : '')}
-        style={{ width: '2rem', height: '2rem' }}
+        style={{ width: '2rem', height: '2rem', display: 'inline-flex' }}
         role="button"
         aria-label="menu"
         aria-expanded="false"
@@ -155,14 +155,14 @@ export function UIOffcanvasAppNavigation() {
               </li>
               <li>
                 <a
-                  className={screen === 'GLOBAL_POSTS' ? 'is-active' : ''}
-                  onClick={() => toScreen('GLOBAL_POSTS')}
+                  className={screen === 'ALL_POSTS' ? 'is-active' : ''}
+                  onClick={() => toScreen('ALL_POSTS')}
                   role="button"
                 >
                   <span className="icon is-small">
                     <FontAwesomeIcon aria-hidden icon="box-open" />
                   </span>
-                  <span>Todos os posts</span>
+                  <span>Todas as postagens</span>
                 </a>
               </li>
               <li>
@@ -190,6 +190,42 @@ export function UIOffcanvasAppNavigation() {
                     <FontAwesomeIcon aria-hidden icon="file-circle-plus" />
                   </span>
                   <span>Nova Postagem</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  className={screen === 'USER_POSTS' ? 'is-active' : ''}
+                  onClick={() => toScreen('USER_POSTS')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="puzzle-piece" />
+                  </span>
+                  <span>Minhas postagens</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  className={screen === 'UNPUBLISHED_USER_POSTS' ? 'is-active' : ''}
+                  onClick={() => toScreen('UNPUBLISHED_USER_POSTS')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="briefcase" />
+                  </span>
+                  <span>Não publicadas</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  className={screen === 'USER_POSTS_PUBLISHED' ? 'is-active' : ''}
+                  onClick={() => toScreen('USER_POSTS_PUBLISHED')}
+                  role="button"
+                >
+                  <span className="icon is-small">
+                    <FontAwesomeIcon aria-hidden icon="upload" />
+                  </span>
+                  <span>Publicadas</span>
                 </a>
               </li>
             </ul>

@@ -8,8 +8,12 @@
     "user": {
       "profileKey": "@key__IUser_profileState"
     },
-    "stacks": {
+    "stack": {
       "storageKey": "@key__IStackState__"
+    },
+    "post": {
+      "storageKey": "@key__IPostState__",
+      "draftStorageKey": "@key__IPostDraftState"
     }
   }
 }
