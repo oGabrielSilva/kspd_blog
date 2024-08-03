@@ -7,6 +7,7 @@ export type TScreen =
   | 'USER_POSTS'
   | 'USER_POSTS_PUBLISHED'
   | 'UNPUBLISHED_USER_POSTS'
+  | 'POST_EDITION'
   | 'NEW_STACK'
   | 'EDIT_STACK'
   | 'ALL_STACKS'

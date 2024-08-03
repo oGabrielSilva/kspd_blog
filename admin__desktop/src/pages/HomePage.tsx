@@ -1,5 +1,6 @@
 import { UIAllPosts } from '@app/components/home/post/UIAllPosts'
 import { UINewPost } from '@app/components/home/post/UINewPost'
+import { UIPostEdition } from '@app/components/home/post/UIPostEdition'
 import { UIUserPosts } from '@app/components/home/post/UIUserPosts'
 import { UIAllStacks } from '@app/components/home/stack/UIAllStacks'
 import { UIEditStack } from '@app/components/home/stack/UIEditStack'
@@ -37,6 +38,7 @@ export function HomePage() {
       {(screen === 'NEW_POST' && <UINewPost />) ||
         (screen === 'ALL_POSTS' && <UIAllPosts />) ||
         (screen === 'USER_POSTS' && <UIUserPosts />) ||
+        (screen === 'POST_EDITION' && <UIPostEdition />) ||
         (screen === 'NEW_STACK' && <UINewStack />) ||
         (screen === 'EDIT_STACK' && <UIEditStack />) ||
         (screen === 'ALL_STACKS' && <UIAllStacks />)}

@@ -88,6 +88,8 @@ export declare global {
 
   interface IPostDraft {
     uid: string
+    title: string
+    slug: string
     content: string
     font: IFontName
   }

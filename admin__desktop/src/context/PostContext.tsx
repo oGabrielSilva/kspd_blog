@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 
 import { useAuth } from '@app/hooks/useAuth'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
@@ -9,6 +9,8 @@ import { Timestamp } from 'firebase/firestore'
 
 interface IPostContext {
   posts: IPost[]
+  postEditing: IPost | null
+  setPostEditing: Dispatch<SetStateAction<IPost | null>>
   update: (newState: IPost[], onComplete?: () => void) => void
   reloadPosts: (onComplete?: (state: IPost[]) => void) => void
 }
@@ -36,6 +38,7 @@ export const PostContext = createContext({} as IPostContext)
 export default function PostContextProvider({ children }: IChildren) {
   const [loaded, setLoaded] = useState(false)
   const [posts, setPosts] = useState<IPost[]>([])
+  const [postEditing, setPostEditing] = useState<IPost | null>(null)
 
   const auth = useAuth()
 
@@ -94,6 +97,8 @@ export default function PostContextProvider({ children }: IChildren) {
           if (onComplete) onComplete()
         },
         reloadPosts,
+        postEditing,
+        setPostEditing,
       }}
     >
       {children}

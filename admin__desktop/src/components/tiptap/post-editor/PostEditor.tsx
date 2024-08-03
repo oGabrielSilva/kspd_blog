@@ -172,7 +172,15 @@ export function PostEditor({ content, onUpdate, font: fontFamily, post, disabled
       style={{ fontFamily: font, height: '100%', borderRadius: 0, border: 'none' }}
     >
       <PostEditorMenuBar post={post} font={font} setFont={setFont} editor={editor} />
-      <EditorContent disabled={disabled} editor={editor} style={{ padding: '0.25rem 0.15rem' }} />
+      <EditorContent
+        disabled={disabled}
+        editor={editor}
+        style={{
+          padding: '0.25rem 1rem',
+          border: '1px solid var(--bulma-border-weak)',
+          borderTop: 'none',
+        }}
+      />
     </div>
   )
 }
