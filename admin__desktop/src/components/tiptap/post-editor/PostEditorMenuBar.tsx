@@ -1,34 +1,22 @@
 import { useColorSchema } from '@app/hooks/useColorSchema'
-import { usePosts } from '@app/hooks/usePost'
-import { openModal } from '@app/lib/bulma/modals'
-import { Auth } from '@app/lib/firebase/auth/Auth'
-import { Firestore } from '@app/lib/firebase/firestore/Firestore'
-import { Storage } from '@app/lib/firebase/storage/Storage'
-import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
-import { uuidv4 } from '@app/utils/uuidv4'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Editor } from '@tiptap/react'
 import { ColorPicker } from 'primereact/colorpicker'
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { UIDropdownFontFamily } from '../basic/UIDropdownFontFamily'
-import { IBlob, UIPickImageModal } from './UIPickImageModal'
 
 interface IProps {
-  post: IPost
   editor: Editor | null
   font: IFontName
   setFont: Dispatch<SetStateAction<IFontName>>
+  onRequireImage: () => void
 }
 
-export function PostEditorMenuBar({ editor, font, setFont, post }: IProps) {
-  const usePostHook = usePosts()
+export function PostEditorMenuBar({ editor, font, setFont, onRequireImage }: IProps) {
   const { textColor, addObserver, removeObserver } = useColorSchema()
 
   const [color, setColor] = useState(textColor.current)
   const [colorBackground, setColorBackground] = useState<string>()
-
-  const [selectedBlob, setSelectedBlob] = useState<IBlob>()
-  const [uploadBlob, setUploadBlob] = useState(false)
 
   const setLink = useCallback(() => {
     if (!editor) return
@@ -76,81 +64,8 @@ export function PostEditorMenuBar({ editor, font, setFont, post }: IProps) {
     ;() => removeObserver(id)
   }, [addObserver, removeObserver, textColor.dark, textColor.light])
 
-  useEffect(() => {
-    if (selectedBlob && editor && !uploadBlob) {
-      setUploadBlob(true)
-      const user = Auth.fast.user
-
-      if (!user) {
-        setUploadBlob(false)
-        setSelectedBlob(void 0)
-        toasterKT.danger('Usuário não encontrado')
-        return
-      }
-
-      locker.lock()
-      const fn = async () => {
-        const imageId = await uuidv4()
-
-        try {
-          const result = await Storage.fast.uploadBlob(
-            selectedBlob.blob,
-            `post/${post.uid}/${imageId}.webp`,
-            {
-              imageId,
-              post: post.uid,
-              user: user.uid,
-            },
-          )
-          if (!result) {
-            toasterKT.danger('Não foi possível fazer upload da imagem')
-            return
-          }
-
-          const { description, figcaption } = selectedBlob
-
-          const newPost = await Firestore.fast.upload(
-            {
-              ...post,
-              contentMedia: [
-                ...(post.contentMedia ? post.contentMedia : []),
-                { description, figcaption, loadType: 'lazy', src: result, type: 'IMAGE' },
-              ],
-            } as IPost,
-            `post/${post.uid}`,
-          )
-
-          if (!newPost) {
-            toasterKT.danger('Erro ao atualizar o post (Desconhecido)')
-            return
-          }
-          usePostHook.update(usePostHook.posts.map((p) => (p.uid === post.uid ? (newPost as IPost) : p)))
-          editor
-            .chain()
-            .focus()
-            .setFigure({ src: result, alt: description, caption: figcaption, title: description })
-            .run()
-        } catch (error) {
-          console.log(error)
-          toasterKT.danger('Erro ao salvar a imagem (Desconhecido)')
-        } finally {
-          locker.unlock()
-          setUploadBlob(false)
-          setSelectedBlob(void 0)
-        }
-      }
-
-      fn()
-
-      // editor.chain().focus().setFigure()
-    }
-  }, [editor, selectedBlob, post, usePostHook, uploadBlob])
-
   return !editor ? null : (
     <div className="bar" style={{ borderRadius: 0, border: '1px solid var(--bulma-border-weak)' }}>
-      <div className="has-text-left">
-        <UIPickImageModal id="editor__pick-img-modal" onChange={setSelectedBlob} />
-      </div>
       <div className="buttons gap are-small">
         <button
           title="Bold [Ctrl + B]"
@@ -519,9 +434,7 @@ export function PostEditorMenuBar({ editor, font, setFont, post }: IProps) {
           aria-label="Adicione uma imagem"
           className={'img button is-text'}
           type="button"
-          onClick={() => {
-            openModal('editor__pick-img-modal')
-          }}
+          onClick={onRequireImage}
         >
           <FontAwesomeIcon aria-hidden icon={'image'} />
         </button>

@@ -41,6 +41,16 @@ export function UIUserPosts() {
       </div>
 
       <div className="py-5">
+        {posts.length > 0 && (
+          <div className="pb-3 is-flex is-justify-content-end">
+            <button className="button is-ghost px-0 is-small" type="button" onClick={reload}>
+              <span className="icon is-small">
+                <FontAwesomeIcon aria-hidden icon="rotate" />
+              </span>
+              <span>Recarregar</span>
+            </button>
+          </div>
+        )}
         {posts.length <= 0 ? (
           <div className="is-flex is-justify-content-space-between gap-3 is-align-items-center">
             <p>Nenhuma postagem encontrada</p>

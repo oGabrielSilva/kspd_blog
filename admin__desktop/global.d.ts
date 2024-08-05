@@ -1,4 +1,5 @@
 import { TSocialIcon } from '@app/utils/socialIcons'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { type Timestamp } from 'firebase/firestore'
 import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
 

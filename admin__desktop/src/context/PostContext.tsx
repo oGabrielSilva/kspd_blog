@@ -9,8 +9,8 @@ import { Timestamp } from 'firebase/firestore'
 
 interface IPostContext {
   posts: IPost[]
-  postEditing: IPost | null
-  setPostEditing: Dispatch<SetStateAction<IPost | null>>
+  editPostID: string | null
+  setEditPostID: Dispatch<SetStateAction<string | null>>
   update: (newState: IPost[], onComplete?: () => void) => void
   reloadPosts: (onComplete?: (state: IPost[]) => void) => void
 }
@@ -38,7 +38,7 @@ export const PostContext = createContext({} as IPostContext)
 export default function PostContextProvider({ children }: IChildren) {
   const [loaded, setLoaded] = useState(false)
   const [posts, setPosts] = useState<IPost[]>([])
-  const [postEditing, setPostEditing] = useState<IPost | null>(null)
+  const [editPostID, setEditPostID] = useState<string | null>(null)
 
   const auth = useAuth()
 
@@ -80,10 +80,9 @@ export default function PostContextProvider({ children }: IChildren) {
       setPosts(await $recoveryPostState())
     })
 
-    return () =>
-      (() => {
-        unlisten.then((ul) => ul())
-      })()
+    return () => {
+      unlisten.then((ul) => ul())
+    }
   }, [])
 
   return (
@@ -97,8 +96,8 @@ export default function PostContextProvider({ children }: IChildren) {
           if (onComplete) onComplete()
         },
         reloadPosts,
-        postEditing,
-        setPostEditing,
+        editPostID,
+        setEditPostID,
       }}
     >
       {children}

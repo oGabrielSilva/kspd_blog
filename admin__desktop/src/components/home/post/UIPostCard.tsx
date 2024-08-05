@@ -1,7 +1,9 @@
+import { HomeContext } from '@app/context/HomeContext'
 import { useAuth } from '@app/hooks/useAuth'
 import { usePosts } from '@app/hooks/usePost'
 import { formatDate } from '@app/utils/formatDate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useContext } from 'react'
 
 interface IProps {
   post: IPost
@@ -10,6 +12,12 @@ interface IProps {
 export function UIPostCard({ post }: IProps) {
   const postHook = usePosts()
   const auth = useAuth()
+  const { setScreen } = useContext(HomeContext)
+
+  const putPostToEdition = (postId: string) => {
+    postHook.setEditPostID(postId)
+    setScreen('POST_EDITION')
+  }
 
   return (
     <div className="card">
@@ -57,7 +65,7 @@ export function UIPostCard({ post }: IProps) {
               <h1 className="title is-4 m-0">{post.title}</h1>
               {post.authorID === auth.user?.uid ? (
                 <button
-                  onClick={() => postHook.putToEdition(post)}
+                  onClick={() => putPostToEdition(post.uid)}
                   type="button"
                   className="button is-ghost p-0 m-0"
                 >

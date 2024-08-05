@@ -11,7 +11,7 @@ export class Storage {
   private app = FirebaseApp.fast
   private storage = getStorage(this.app.app)
 
-  public async uploadBlob(blob: Blob, path: string, metadata?: Record<string, string>) {
+  public async uploadBlob(blob: Blob, path: string, metadata?: Record<string, string>, addSerial = true) {
     const user = Auth.fast.user
     if (!user) {
       toasterKT.danger('Usuário desconhecido')
@@ -24,10 +24,12 @@ export class Storage {
         contentType: blob.type,
       })
       const url = await getDownloadURL(result.ref)
-      return (
-        url +
-        '?serial='.concat(encodeURIComponent(Date.now() + Date.now().toString(36) + Math.random().toString()))
-      )
+      return addSerial
+        ? url +
+            '?serial='.concat(
+              encodeURIComponent(Date.now() + Date.now().toString(36) + Math.random().toString()),
+            )
+        : url
     } catch (error) {
       console.log(error)
       if (error instanceof FirebaseError) toasterKT.danger(AuthenticationError.messages[error.code])

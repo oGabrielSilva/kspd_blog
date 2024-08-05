@@ -88,7 +88,8 @@ export function UIStackTableItem({ stack, index }: IProps) {
           >
             <FontAwesomeIcon aria-hidden icon={'trash'} />
           </button>
-
+        </div>
+        <div className="has-text-left">
           <UIModal
             id={modalDeleteId}
             title={`Remover a Stack [${stack.name}]?`}

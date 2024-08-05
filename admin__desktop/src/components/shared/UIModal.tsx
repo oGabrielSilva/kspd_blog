@@ -99,7 +99,7 @@ export const UIModal = forwardRef<HTMLDivElement, IProps>(function Modal(props, 
                         <FontAwesomeIcon aria-hidden icon={props.secondaryButton.icon} />
                       </span>
                     )}
-                    {props.secondaryButton.label}
+                    <span>{props.secondaryButton.label}</span>
                   </button>
                 )}
 
@@ -122,7 +122,7 @@ export const UIModal = forwardRef<HTMLDivElement, IProps>(function Modal(props, 
                         <FontAwesomeIcon aria-hidden icon={props.primaryButton.icon} />
                       </span>
                     )}
-                    {props.primaryButton.label}
+                    <span>{props.primaryButton.label}</span>
                   </button>
                 )}
               </div>
