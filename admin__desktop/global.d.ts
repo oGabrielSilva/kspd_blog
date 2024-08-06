@@ -80,7 +80,6 @@ export declare global {
     isPublished: boolean
     isLocked: boolean
     mediaImage: IMedia | null
-    contentMedia: IMedia[] | null | undefined
     authorID: string
     stacks: Pick<IStack, 'uid' | 'name' | 'description'>[]
     createdAt: Timestamp

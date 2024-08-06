@@ -150,7 +150,6 @@ export function PostEditorMenuBar({ editor, font, setFont, onRequireImage }: IPr
         <div title="Fonte do texto" aria-label="Troque a fonte do texto">
           <UIDropdownFontFamily
             id="dp___post_editor_font_pick"
-            openUP
             font={font}
             borderless
             onChange={(f) => setFont(f)}

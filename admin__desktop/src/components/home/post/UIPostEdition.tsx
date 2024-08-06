@@ -2,7 +2,6 @@ import { UIModal } from '@app/components/shared/UIModal'
 import { PostEditor } from '@app/components/tiptap/post-editor/PostEditor'
 import { AppBarContext } from '@app/context/AppBarContext'
 import { HomeContext } from '@app/context/HomeContext'
-import { useAuth } from '@app/hooks/useAuth'
 import { usePosts } from '@app/hooks/usePost'
 import { openModal } from '@app/lib/bulma/modals'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
@@ -20,13 +19,13 @@ const editionHasChangesModalId = 'id__modal-has-edition-changes'
 const imageModalId = 'id__modal-postEdition_IMG_PICK'
 
 const Edition = () => {
-  const auth = useAuth()
   const { setScreen } = useContext(HomeContext)
   const appBar = useContext(AppBarContext)
 
   const postHook = usePosts()
   const post = postHook.posts.find((p) => p.uid === postHook.editPostID)!
 
+  const [autoSave, setAutoSave] = useState(false)
   const [editor, setEditor] = useState<Editor>()
 
   const [hasChanges, setHasChanges] = useState(false)
@@ -36,7 +35,6 @@ const Edition = () => {
   const [slug, setSlug] = useState(post.slug)
   const [font, setFont] = useState(post.font)
   const [content, setContent] = useState(post.htmlContent)
-  const [medias, setMedias] = useState(Array.isArray(post.contentMedia) ? post.contentMedia : [])
 
   useEffect(() => setSlug(ValidationKassiopeiaTool.fast.slugify(title)), [title])
 
@@ -73,7 +71,6 @@ const Edition = () => {
         data.font = font
         data.slug = slug
         data.htmlContent = content
-        data.contentMedia = medias
         data.createdAt = new Timestamp(data.createdAt.seconds, data.createdAt.nanoseconds)
         data.updatedAt = Timestamp.now()
 
@@ -96,7 +93,14 @@ const Edition = () => {
 
       fn()
     }
-  }, [content, font, hasChanges, medias, post, postHook, slug, title])
+  }, [content, font, hasChanges, post, postHook, slug, title])
+
+  useEffect(() => {
+    if (autoSave) {
+      save()
+      setAutoSave(false)
+    }
+  }, [autoSave, save])
 
   useEffect(() => {
     function fn(e: KeyboardEvent) {
@@ -132,27 +136,14 @@ const Edition = () => {
       />
 
       <UIPostImagePicker
-        medias={medias}
         modalId={imageModalId}
-        post={post}
-        user={auth.user!}
-        addMedia={(newMedia) => {
-          setHasChanges(true)
-          setMedias((v) => [...v, newMedia])
-        }}
-        onPick={(medias) => {
-          if (editMetadata) return
-          if (editor) {
-            medias.forEach((media) => {
-              editor
-                .chain()
-                .focus()
-                .setFigure({ src: media.src, alt: media.description, caption: media.figcaption })
-                .insertContent('<p></p>')
-                .run()
-            })
-            setHasChanges(true)
-          }
+        onPick={(dataURL, caption, description) => {
+          editor
+            ?.chain()
+            .focus()
+            .setFigure({ src: dataURL, caption, title: description, alt: description })
+            .insertContent('<p></p>')
+            .run()
         }}
       />
       <div>

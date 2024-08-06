@@ -56,7 +56,16 @@ export function UIDropdownFontFamily({ onChange, font, ...props }: IProps) {
           aria-haspopup="true"
           aria-controls={props.id}
           style={{ fontFamily: font, ...(props.borderless ? { border: 'none', boxShadow: 'none' } : {}) }}
-          onClick={() => setActive((act) => !act)}
+          onClick={() => {
+            setActive((act) => {
+              if (!act) {
+                setTimeout(() => {
+                  document.querySelector('[data-font-picker-menu-content]')?.scrollIntoView()
+                }, 500)
+              }
+              return !act
+            })
+          }}
         >
           <span>{font}</span>
           <span className="icon is-small">
@@ -66,6 +75,7 @@ export function UIDropdownFontFamily({ onChange, font, ...props }: IProps) {
       </div>
       <div className="dropdown-menu" id={props.id} role="menu">
         <div
+          data-font-picker-menu-content
           className="dropdown-content px-1"
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem' }}
         >
