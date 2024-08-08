@@ -23,7 +23,7 @@ function buildTauri() {
 
 // Função para criar um commit no Git
 function createGitCommit(newVersion) {
-  execSync('git add .', { stdio: 'inherit' })
+  execSync('cd .. && git add .', { stdio: 'inherit' })
   execSync(`git commit -m "Release v${newVersion}"`, { stdio: 'inherit' })
 }
 
