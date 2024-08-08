@@ -103,7 +103,7 @@ export default function PostContextProvider({ children }: IChildren) {
         })
       })
     },
-    [reloadPosts],
+    [reloadPosts, update],
   )
 
   useEffect(() => {

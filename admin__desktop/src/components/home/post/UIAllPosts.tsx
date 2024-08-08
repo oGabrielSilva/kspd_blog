@@ -1,5 +1,4 @@
 import { HomeContext } from '@app/context/HomeContext'
-import { useAuth } from '@app/hooks/useAuth'
 import { usePosts } from '@app/hooks/usePost'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,7 +6,6 @@ import { useContext } from 'react'
 import { UIPostCard } from './UIPostCard'
 
 export function UIAllPosts() {
-  const auth = useAuth()
   const { posts, reloadPosts } = usePosts()
   const { setScreen } = useContext(HomeContext)
 
@@ -24,9 +22,9 @@ export function UIAllPosts() {
       <div className="is-flex is-align-items-center is-justify-content-space-between gap-7 pb-5">
         <div>
           <h1 className="title p-0 m-0">Postagens</h1>
-          <p>
+          <p className="pt-3">
             Explore todas as postagens. Organize e edite o conteúdo para garantir que cada postagem ofereça
-            insights valiosos e relevantes
+            ideias valiosas e relevantes
           </p>
         </div>
         <button onClick={() => setScreen('NEW_POST')} type="button" className="button is-small is-link">

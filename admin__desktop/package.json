@@ -1,13 +1,14 @@
 {
   "name": "blog_kassiopeia_admin",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "release": "node ./release.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",

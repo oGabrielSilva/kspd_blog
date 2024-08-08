@@ -1,6 +1,8 @@
 import { UIAllPosts } from '@app/components/home/post/UIAllPosts'
 import { UINewPost } from '@app/components/home/post/UINewPost'
 import { UIPostEdition } from '@app/components/home/post/UIPostEdition'
+import { UIPublishedUserPosts } from '@app/components/home/post/UIPublishedUserPosts'
+import { UIUnpublishedUserPosts } from '@app/components/home/post/UIUnpublishedUserPosts'
 import { UIUserPosts } from '@app/components/home/post/UIUserPosts'
 import { UIAllStacks } from '@app/components/home/stack/UIAllStacks'
 import { UIEditStack } from '@app/components/home/stack/UIEditStack'
@@ -37,6 +39,8 @@ export function HomePage() {
     <div className="container p-5">
       {(screen === 'NEW_POST' && <UINewPost />) ||
         (screen === 'ALL_POSTS' && <UIAllPosts />) ||
+        (screen === 'UNPUBLISHED_USER_POSTS' && <UIUnpublishedUserPosts />) ||
+        (screen === 'USER_POSTS_PUBLISHED' && <UIPublishedUserPosts />) ||
         (screen === 'USER_POSTS' && <UIUserPosts />) ||
         (screen === 'POST_EDITION' && <UIPostEdition />) ||
         (screen === 'NEW_STACK' && <UINewStack />) ||

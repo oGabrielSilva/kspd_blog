@@ -143,18 +143,6 @@ export function UIOffcanvasAppNavigation() {
             <ul className="menu-list">
               <li>
                 <a
-                  className={screen === 'DASHBOARD' ? 'is-active' : ''}
-                  onClick={() => toScreen('DASHBOARD')}
-                  role="button"
-                >
-                  <span className="icon is-small">
-                    <FontAwesomeIcon aria-hidden icon="gauge" />
-                  </span>
-                  <span>Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a
                   className={screen === 'ALL_POSTS' ? 'is-active' : ''}
                   onClick={() => toScreen('ALL_POSTS')}
                   role="button"

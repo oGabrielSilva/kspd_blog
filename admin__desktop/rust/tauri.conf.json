@@ -6,8 +6,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "Kassiopeia Dev Blog",
-    "version": "0.0.0"
+    "productName": "Kassiopeia Admin",
+    "version": "1.0.1"
   },
   "tauri": {
     "allowlist": {
@@ -50,7 +50,13 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
+      "targets": [
+        "deb",
+        "appimage",
+        "msi",
+        "rpm",
+        "updater"
+      ],
       "identifier": "com.kassiopeia.dev",
       "icon": [
         "icons/32x32.png",

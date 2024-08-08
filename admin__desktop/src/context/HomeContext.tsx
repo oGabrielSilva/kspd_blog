@@ -22,7 +22,7 @@ interface IProviderProps extends IChildren {}
 export const HomeContext = createContext({} as IHomeContext)
 
 export default function HomeContextProvider({ children }: IProviderProps) {
-  const [screen, setScreen] = useState<TScreen>('NEW_POST')
+  const [screen, setScreen] = useState<TScreen>('ALL_POSTS')
 
   return <HomeContext.Provider value={{ screen, setScreen }}>{children}</HomeContext.Provider>
 }
