@@ -17,13 +17,13 @@ function updateVersion(newVersion) {
 
 // Função para gerar builds usando Tauri
 function buildTauri() {
-  console.log('Gerando build para MSI, DEB, AppImage, RPM e updater...')
+  console.log('Gerando build para msi, deb, AppImage, rpm e updater (dependendo do OS atual)...')
   execSync('bunx tauri build', { stdio: 'inherit' })
 }
 
 // Função para criar um commit no Git
 function createGitCommit(newVersion) {
-  execSync('cd .. && git add .', { stdio: 'inherit' })
+  execSync('git add .', { stdio: 'inherit' })
   execSync(`git commit -m "Release v${newVersion}"`, { stdio: 'inherit' })
 }
 
