@@ -15,6 +15,12 @@ import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
+Array.prototype.pickRandom = function <T>(): T | null {
+  if (this.length === 0) return null
+  const item = this[Math.floor(Math.random() * this.length)]
+  return item ? item : null
+}
+
 globalThis.locker = ScreenLockerKassiopeiaTool.fast
 
 library.add(fas, fab, far)

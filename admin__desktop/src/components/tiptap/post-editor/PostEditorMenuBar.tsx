@@ -65,7 +65,7 @@ export function PostEditorMenuBar({ editor, font, setFont, onRequireImage }: IPr
   }, [addObserver, removeObserver, textColor.dark, textColor.light])
 
   return !editor ? null : (
-    <div className="bar" style={{ borderRadius: 0, border: '1px solid var(--bulma-border-weak)' }}>
+    <div className="bar">
       <div className="buttons gap are-small">
         <button
           title="Bold [Ctrl + B]"

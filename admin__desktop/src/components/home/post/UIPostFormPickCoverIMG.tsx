@@ -4,12 +4,12 @@ import { closeModal, openModal } from '@app/lib/bulma/modals'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ImageKassiopeiaProcessingTool, ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
-import { Dispatch, SetStateAction, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { IIMG } from './UINewPost'
 
 interface IProps {
   img: IIMG
-  changeIMG: Dispatch<SetStateAction<IIMG>>
+  changeIMG(state: IIMG): void
 }
 
 const imgModalId = '___IDModal_cover__img'
@@ -20,16 +20,13 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
   const descriptionInputRef = useRef<HTMLInputElement>(null)
   const figcaptionInputRef = useRef<HTMLInputElement>(null)
 
-  const [description, setDescription] = useState('')
-  const [figcaption, setFigcaption] = useState('')
-
   function isValid() {
-    if (figcaption.length < 5) {
+    if (img.figcaption.length < 5) {
       toasterKT.warn('Digite um figcaption um pouco maior')
       anim.shakeX(figcaptionInputRef.current!)
       return false
     }
-    if (description.length < 5) {
+    if (img.description.length < 5) {
       toasterKT.warn('Digite uma descrição um pouco maior')
       anim.shakeX(descriptionInputRef.current!)
       return false
@@ -48,10 +45,8 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
 
         closeModal(imgModalId)
 
-        changeIMG((v) => {
-          if (v.blob) URL.revokeObjectURL(v.src)
-          return { blob, src: URL.createObjectURL(blob), description, figcaption }
-        })
+        if (img.blob) URL.revokeObjectURL(img.src)
+        changeIMG({ ...img, blob, src: URL.createObjectURL(blob) })
       } catch (error) {
         console.log(error)
         toasterKT.danger('Erro ao processar a imagem')
@@ -63,14 +58,32 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
 
   return (
     <div>
-      <label className="label">Imagem de capa</label>
-      <img
-        style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
-        role="button"
-        className="image is-3by1 is-clickable pb-4"
-        src={img.src}
-        onClick={() => openModal(imgModalId)}
-      />
+      <div className="pb-4">
+        <label className="label">Imagem de capa</label>
+        <img
+          style={{ objectFit: 'cover', width: '100%', height: 'auto' }}
+          role="button"
+          className="image is-3by1 is-clickable"
+          src={img.src}
+          onClick={() => openModal(imgModalId)}
+        />
+        <div style={{ fontSize: 12 }}>
+          {img.figcaption && (
+            <p>
+              <small>
+                <strong>Figcaption:</strong> {img.figcaption}
+              </small>
+            </p>
+          )}
+          {img.description && (
+            <p>
+              <small>
+                <strong>Descrição:</strong> {img.description}
+              </small>
+            </p>
+          )}
+        </div>
+      </div>
 
       <div>
         <UIModal id={imgModalId} title="Imagem de capa" secondaryButton={{ label: 'Cancelar' }}>
@@ -78,8 +91,8 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
             <div className="pb-3" ref={figcaptionInputRef}>
               <UIInput
                 label="Figcaption"
-                value={figcaption}
-                onImputed={(fig) => setFigcaption(fig)}
+                value={img.figcaption}
+                onImputed={(fig) => changeIMG({ ...img, figcaption: fig })}
                 placeholder="Foto de [descreva a imagem]. Por [autor]"
               />
             </div>
@@ -87,8 +100,8 @@ export function UIPostFormPickCoverIMG({ img, changeIMG }: IProps) {
             <div className="pb-3" ref={descriptionInputRef}>
               <UIInput
                 label="Descrição"
-                value={description}
-                onImputed={(desc) => setDescription(desc)}
+                value={img.description}
+                onImputed={(desc) => changeIMG({ ...img, description: desc })}
                 placeholder="Descreva a imagem"
                 helper={{
                   isVisible: true,

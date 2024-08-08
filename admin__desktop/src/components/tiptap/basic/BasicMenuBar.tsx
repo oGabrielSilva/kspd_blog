@@ -147,7 +147,7 @@ export function BasicMenuBar({ editor, font, setFont }: IProps) {
         </div>
 
         <div title="Fonte do texto" aria-label="Troque a fonte do texto">
-          <UIDropdownFontFamily id="dp___font" openUP font={font} onChange={(f) => setFont(f)} />
+          <UIDropdownFontFamily borderless id="dp___font" openUP font={font} onChange={(f) => setFont(f)} />
         </div>
 
         <button

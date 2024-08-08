@@ -4,6 +4,10 @@ import { type Timestamp } from 'firebase/firestore'
 import { ScreenLockerKassiopeiaTool } from 'kassiopeia-tools'
 
 export declare global {
+  interface Array<T> {
+    pickRandom(): T | null
+  }
+
   type IFontName =
     | 'Inter'
     | 'Lato'
@@ -67,6 +71,8 @@ export declare global {
     generic: string
   }
 
+  type TStackForPost = Pick<IStack, 'uid' | 'name' | 'description'>
+
   interface IPost {
     uid: string
     title: string
@@ -81,7 +87,7 @@ export declare global {
     isLocked: boolean
     mediaImage: IMedia | null
     authorID: string
-    stacks: Pick<IStack, 'uid' | 'name' | 'description'>[]
+    stacks: TStackForPost[]
     createdAt: Timestamp
     updatedAt: Timestamp
   }

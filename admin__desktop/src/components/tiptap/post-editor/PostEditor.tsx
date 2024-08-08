@@ -63,7 +63,7 @@ export function PostEditor({
       data-tiptap-editor
       data-tiptap-post-editor
       className="pb-3"
-      style={{ fontFamily, height: '100%', borderRadius: 0, border: 'none' }}
+      style={{ fontFamily, height: '100%' }}
     >
       <PostEditorMenuBar
         font={fontFamily}
@@ -75,8 +75,6 @@ export function PostEditor({
         editor={editor}
         style={{
           padding: '0.25rem 1rem',
-          border: '1px solid var(--bulma-border-weak)',
-          borderTop: 'none',
         }}
       />
     </div>

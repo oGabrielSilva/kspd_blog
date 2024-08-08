@@ -2,6 +2,7 @@ import { createContext, Dispatch, SetStateAction, useCallback, useEffect, useSta
 
 import { useAuth } from '@app/hooks/useAuth'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
+import { Storage } from '@app/lib/firebase/storage/Storage'
 import { Store } from '@app/lib/tauri-plugin-store/Store'
 import properties from '@resources/config/properties.json'
 import { listen } from '@tauri-apps/api/event'
@@ -11,8 +12,9 @@ interface IPostContext {
   posts: IPost[]
   editPostID: string | null
   setEditPostID: Dispatch<SetStateAction<string | null>>
-  update: (newState: IPost[], onComplete?: () => void) => void
-  reloadPosts: (onComplete?: (state: IPost[]) => void) => void
+  update(newState: IPost[], onComplete?: () => void): void
+  reloadPosts(onComplete?: (state: IPost[]) => void): void
+  deletePost(postId: string, onSuccess?: () => void, onFailure?: () => void): Promise<string>
 }
 
 export const reloadPostEventId = 'reload-post-from-local'
@@ -42,6 +44,13 @@ export default function PostContextProvider({ children }: IChildren) {
 
   const auth = useAuth()
 
+  const update = useCallback<IPostContext['update']>((state, onComplete?: () => void) => {
+    $setPostState(state)
+    setPosts(state)
+
+    if (onComplete) onComplete()
+  }, [])
+
   const reloadPosts = useCallback<IPostContext['reloadPosts']>((onLoad) => {
     let sts = [] as IPost[]
     Firestore.fast
@@ -58,6 +67,44 @@ export default function PostContextProvider({ children }: IChildren) {
         if (onLoad) onLoad(sts)
       })
   }, [])
+
+  const deletePost = useCallback<IPostContext['deletePost']>(
+    (postId, onSuccess, onFailure) => {
+      return new Promise((resolve, reject) => {
+        reloadPosts((posts) => {
+          const post = posts.find((p) => p.uid === postId)
+          if (!post) return reject(new Error('Post não encontrado'))
+          const fn = () => {
+            Firestore.fast
+              .delete('post', postId)
+              .then(() => {
+                resolve('Sucesso')
+                update(posts.filter((p) => p.uid !== postId))
+                if (onSuccess) onSuccess()
+              })
+              .catch((e) => {
+                console.log(e)
+                reject('Erro ao apagar o documento (Console)')
+                if (onFailure) onFailure()
+              })
+          }
+
+          if (post.mediaImage) {
+            Storage.fast
+              .deleteAll('post', postId)
+              .then((res) => {
+                if (res) fn()
+              })
+              .catch((e) => {
+                console.log(e)
+                reject('Erro ao apagar a imagem de mídia principal (Console)')
+              })
+          } else fn()
+        })
+      })
+    },
+    [reloadPosts],
+  )
 
   useEffect(() => {
     if (!loaded) {
@@ -89,15 +136,11 @@ export default function PostContextProvider({ children }: IChildren) {
     <PostContext.Provider
       value={{
         posts,
-        update: (state, onComplete?: () => void) => {
-          $setPostState(state)
-          setPosts(state)
-
-          if (onComplete) onComplete()
-        },
+        update,
         reloadPosts,
         editPostID,
         setEditPostID,
+        deletePost,
       }}
     >
       {children}

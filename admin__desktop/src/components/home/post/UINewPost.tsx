@@ -1,23 +1,20 @@
 import { UIInput } from '@app/components/shared/UIInput'
-import { UIModal } from '@app/components/shared/UIModal'
 import { UITextarea } from '@app/components/shared/UITextarea'
 import { BasicEditor } from '@app/components/tiptap/basic/BasicEditor'
 import { defaultFont, UIDropdownFontFamily } from '@app/components/tiptap/basic/UIDropdownFontFamily'
 import { HomeContext } from '@app/context/HomeContext'
 import { useAuth } from '@app/hooks/useAuth'
 import { usePosts } from '@app/hooks/usePost'
-import { closeModal, openModal } from '@app/lib/bulma/modals'
 import { Firestore } from '@app/lib/firebase/firestore/Firestore'
 import { Storage } from '@app/lib/firebase/storage/Storage'
 import { toasterKT } from '@app/lib/kassiopeia-tools/toaster'
-import { minimizeText } from '@app/utils/minimizeText'
 import { uuidv4 } from '@app/utils/uuidv4'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import imgPlaceholder from '@resources/img/blog_placeholder.webp'
 import { Timestamp } from 'firebase/firestore'
 import { ScreenLockerKassiopeiaTool, ValidationKassiopeiaTool } from 'kassiopeia-tools'
 import { FormEventHandler, useContext, useEffect, useRef, useState } from 'react'
 import { UIStackPick } from '../stack/UIStackPick'
+import { UIStackTableView } from '../stack/UIStackTableView'
 import { UIPostFormKeywordsView } from './UIPostFormKeywordsView'
 import { UIPostFormPickCoverIMG } from './UIPostFormPickCoverIMG'
 
@@ -227,99 +224,7 @@ export function UINewPost() {
             <UIStackPick selectedStacks={stacks} setSelectedStacks={setStacks} id="ui__stackpick" />
           </div>
 
-          <div className="table-container pt-1">
-            <table className="table is-fullwidth is-hoverable">
-              <thead>
-                <tr>
-                  <th className="has-text-centered">Stack</th>
-                  <th className="has-text-centered">Descrição</th>
-                  <th className="has-text-centered">Meta descrição</th>
-                  <th className="has-text-centered">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stacks.length < 1 ? (
-                  <tr>
-                    <td colSpan={5}>Nenhuma Stack adicionada</td>
-                  </tr>
-                ) : (
-                  stacks.map((stack, index) => {
-                    return (
-                      <tr key={index} data-tr={index}>
-                        <th className="has-text-centered">{stack.name}</th>
-                        <td>
-                          {stack.description ? (
-                            <>
-                              <button
-                                onClick={() => openModal('___stackDesc__stackName_' + index)}
-                                type="button"
-                                className="button is-ghost p-0 m-0"
-                                style={{ fontSize: 14 }}
-                              >
-                                Ver descrição
-                              </button>
-                              <div className="has-text-left">
-                                <UIModal
-                                  title={`Descrição da Stack [${stack.name}]`}
-                                  id={'___stackDesc__stackName_' + index}
-                                  secondaryButton={{ label: 'Fechar' }}
-                                >
-                                  <div
-                                    dangerouslySetInnerHTML={{ __html: stack.description.content ?? '' }}
-                                    className="edited"
-                                    style={
-                                      (!!stack.description.font && { fontFamily: stack.description.font }) ||
-                                      {}
-                                    }
-                                  />
-                                </UIModal>
-                              </div>
-                            </>
-                          ) : (
-                            void 0
-                          )}
-                        </td>
-                        <td>{minimizeText(stack.metaDescription)}</td>
-                        <td>
-                          <div className="buttons is-justify-content-center has-text-left">
-                            <button
-                              onClick={() => openModal('___stackRM__stackName_' + index)}
-                              type="button"
-                              className="button is-small is-danger"
-                            >
-                              <FontAwesomeIcon aria-hidden icon={'trash'} />
-                            </button>
-
-                            <UIModal
-                              id={'___stackRM__stackName_' + index}
-                              title={`Remover a Stack [${stack.name}] do post?`}
-                              primaryButton={{
-                                label: 'Sim, remover',
-                                design: 'warning',
-                                closeModalOnClick: false,
-                                onClick: () => {
-                                  closeModal('___stackRM__stackName_' + index, () => {
-                                    const tr = document.querySelector<HTMLTableRowElement>(
-                                      `[data-tr="${index}"]`,
-                                    )!
-                                    toasterKT.animationTool.zoomOutEnd(tr).addEventOnCompletion(() => {
-                                      setStacks((s) => s.filter(({ uid }) => uid !== stack.uid))
-                                      toasterKT.animationTool.clean(tr)
-                                    })
-                                  })
-                                },
-                              }}
-                              secondaryButton={{ label: 'Cancelar', design: 'link' }}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })
-                )}
-              </tbody>
-            </table>
-          </div>
+          <UIStackTableView stacks={stacks} onClickDeleteButton={setStacks} />
         </div>
 
         <div className="pt-3">
